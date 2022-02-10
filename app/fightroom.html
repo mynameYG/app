@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+	<script src="js/erisapi.js"></script>
+	<style>
+	    * { margin: 0; padding: 0; box-sizing: border-box; color: #fff;}
+		.concent{position: relative; background:url(img/timg.jpg) no-repeat ; background-size: cover;}
+	    .select{position: absolute; width:500px; height: 104px;left: 50%;top: 50%; margin-left: -250px;margin-top: -60px; display:flex;justify-content: space-between; } 
+	    .select div{width: 42%; height: 100%;  color: #04786D;text-align: center; font-weight: bolder;font-size: 28px;}
+		.select p{ margin: 0px; font-size: 24px; padding-top: 10px; }
+	</style>
+</head>
+<body>
+	 <div class="concent" id="concent">
+		<div class="select"> 
+			<div id="createFight">
+				<img src="img/indeximg/duizhan5.png" alt="" />
+				<p>发起对战</p>
+			</div>
+			<div id="acceptFight">
+				<img src="img/indeximg/duizhan5.png" alt="" />
+				<p>加入对战</p>
+			</div>
+			<div id="fighter1div" style="display: none;">
+				<img src="" alt="" style="width: 100px; height: 100px;" />
+				<p></p>
+			</div>
+			<div id="fighter1room" style="display: none; margin-top: -50px;">
+				<p style="padding-top: 0px;">已生成对战房间</p>
+				<p><span id="fighter1roomId"></span></p>
+				<p>请告知好友输入房间号加入对战</p>
+				<p>超时倒计时：<span id="timeout"></span></p>
+			</div>
+			<div id="fighter1timeout" style="display: none;">
+				<p>等待结束，无人应战</p>
+				<p>对战结束</p>
+			</div>
+			<div id="fighter2input" style="display: none;">
+				<p>请输入房间号</p>
+				<p><input type="text" id="roomIdinput" style="width: 100%; color: #000; text-align: center;" /></p>
+				<p><input type="button" id="acceptBtn" value="确定" style="padding: 5px 10px; background: #00796A; border: none;" /></p>
+			</div>
+			<div id="fighter2div" style="display: none;">
+				<img src="" alt="" style="width: 100px; height: 100px;" />
+				<p></p>
+			</div>
+		</div>
+		<div class="select" id="startFightDiv" style="display: none;">
+			<input type="button" id="startFightBtn" value="开始对战" style="margin: 0px auto; padding: 5px 10px; background: #00796A; border: none;" />
+		</div>
+	 </div>
+	<script>
+		document.addEventListener('plusready', function(){
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var concent = $("#concent");
+			concent.css({"width":width,"height":height});
+			
+			var createFight = $("#createFight");
+			var acceptFight = $("#acceptFight");
+			var fighter1div = $("#fighter1div");
+			var fighter1room = $("#fighter1room");
+			var fighter1roomId = $("#fighter1roomId");
+			var timeout = $("#timeout");
+			var fighter1timeout = $("#fighter1timeout");
+			var fighter2div = $("#fighter2div");
+			var startFightDiv = $("#startFightDiv");
+			var startFightBtn = $("#startFightBtn");
+			var fighter2input = $("#fighter2input");
+			var roomIdinput = $("#roomIdinput");
+			var acceptBtn = $("#acceptBtn");
+			
+			createFight.click(function(){
+				createMask(true);
+				plus.storage.setItem("fight_role", "1"); // 用户是fighter1
+				ErisApi.CreateFight(function(result) {
+					plus.storage.setItem("fight_roomId", result.data.roomId);
+					
+					var accepted = false;
+					
+					createFight.hide();
+					acceptFight.hide();
+					fighter1div.children("img").attr("src", UrlHelper.makeUrl(plus.storage.getItem("uinfo_avatar")) || "img/e16989a0.jpg");
+					fighter1div.children("p").html(plus.storage.getItem("uinfo_nickname") || "");
+					fighter1roomId.html(parseInt(plus.storage.getItem("fight_roomId")));
+					var seconds = 301;
+					var countDown = function() {
+						if (!accepted) {
+							seconds--;
+							timeout.html(seconds);
+							if (seconds > 0) {
+								setTimeout(countDown, 1000);
+							} else {
+								accepted = true; // 超时也需要关闭标志
+								fighter1room.hide();
+								fighter1timeout.show();
+							}
+						}
+					};
+					countDown();
+					fighter1div.show();
+					fighter1room.show();
+					createMask(false);
+					
+					var checkAccepted = function() {
+						if (!accepted) {
+							setTimeout(function() {
+								ErisApi.GetAccepter(parseInt(plus.storage.getItem("fight_roomId")), function(result) {
+									if (result.data.code) {
+										checkAccepted();
+									} else {
+										accepted = true;
+										plus.storage.setItem("fight_opponent_nickname", result.data.fighter2.nickname);
+										plus.storage.setItem("fight_opponent_avatar", result.data.fighter2.avatar);
+										fighter2div.children("img").attr("src", UrlHelper.makeUrl(plus.storage.getItem("fight_opponent_avatar")) || "img/e16989a0.jpg");
+										fighter2div.children("p").html(plus.storage.getItem("fight_opponent_nickname") || "");
+										fighter1room.hide();
+										fighter2div.show();
+										startFightBtn.click(function() {
+											createMask(true);
+											ErisApi.StartFight(parseInt(plus.storage.getItem("fight_roomId")), function(result) {
+												createMask(false);
+												navigateTo("fight.html", false, null, {
+													questions: result.data.questions
+												});
+											}, function(error) {
+												showTip(true, error.msg, 2000);
+											});
+										});
+										startFightDiv.show();
+									}
+								}, function(error) {
+									showTip(true, error.msg, 2000);
+								});
+							}, 1000);
+						}
+					}
+					checkAccepted();
+				}, function(error) {
+					createMask(false);
+					showTip(true, error.msg, 2000);
+				});
+			});
+			
+			acceptFight.click(function() {
+				plus.storage.setItem("fight_role", "2"); // 用户是fighter2
+				createFight.hide();
+				acceptFight.hide();
+				fighter2div.children("img").attr("src", UrlHelper.makeUrl(plus.storage.getItem("uinfo_avatar")) || "img/e16989a0.jpg");
+				fighter2div.children("p").html(plus.storage.getItem("uinfo_nickname") || "");
+				fighter2input.show();
+				fighter2div.show();
+				acceptBtn.click(function() {
+					var roomId = roomIdinput.val();
+					if (roomId) {
+						createMask(true);
+						ErisApi.AcceptFight(parseInt(roomId), function(result) {
+							createMask(false);
+							plus.storage.setItem("fight_opponent_nickname", result.data.fighter1.nickname);
+							plus.storage.setItem("fight_opponent_avatar", result.data.fighter1.avatar);
+							fighter1div.children("img").attr("src", UrlHelper.makeUrl(plus.storage.getItem("fight_opponent_avatar")) || "img/e16989a0.jpg");
+							fighter1div.children("p").html(plus.storage.getItem("fight_opponent_nickname") || "");
+							fighter2input.hide();
+							fighter1div.show();
+							var checkStarted = function() {
+								setTimeout(function() {
+									ErisApi.GetStartSign(parseInt(plus.storage.getItem("fight_roomId")), function(result) {
+										if (result.data.code) {
+											checkStarted();
+										} else {
+											navigateTo("fight.html", false, null, {
+												questions: result.data.questions
+											});
+										}
+									}, function(error) {
+										showTip(true, error.msg, 2000);
+									});
+								}, 1000);
+							}
+							checkStarted();
+						}, function(error) {
+							createMask(false);
+							showTip(true, error.msg, 2000);
+						});
+					}
+				});
+			});
+		});
+	</script>
+</body>
+</html>

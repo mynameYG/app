@@ -1,0 +1,85 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/eristool.js"></script>
+		<script src="js/erisapi.js"></script>
+		<style>
+			*{margin:0;padding:0;box-sizing: border-box;}
+			.content{position: relative;}
+			.kuang{background:rgba(198,237,234,0.8); width: 500px;height: 200px;position: absolute;top: 50%; left: 50%;
+			     margin-left: -250px;   margin-top: -100px; display: flex; justify-content: space-around;
+			 }
+			 .kuang>div{
+				 margin-top: 40px;
+				 width:120px;
+				 height: 120px;
+				 border: 1px solid #00BBB4;
+				 text-align: center;
+				 padding: 26px 0px;
+				 font-weight: bold;
+				 border-radius: 50%;
+			 }
+			 
+		</style>
+	</head>
+	<body>
+		<div class="content" id="content">
+			<div class="kuang"> 
+				<div class="kuang_1" id="kuang_1">
+					<img src="img/aaa.png" alt="">
+					<p>单选题</p> 
+				</div>
+				<div class="kuang_2" id="kuang_2">
+					<img src="img/bbb.png" alt="">
+					<p>多选题</p>
+				</div>
+				<div class="kuang_3" id="kuang_3">
+					<img src="img/ccc.png" alt="">
+					<p>判断题</p>
+				</div>
+			</div>
+		</div>
+	</body>
+	<script>
+		document.addEventListener('plusready', function(){
+			var thisWebView = plus.webview.currentWebview();
+			var thisExamMode = thisWebView.examMode;
+			var thisExamJob = thisWebView.examJob;
+			var thisExamJobTxt = thisWebView.examJobTxt;
+			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var content = $("#content");
+			var answer = $("#answer");
+			content.css({"width":width,"height":height});
+			$("#kuang_1").click(function(){
+				navigateTo("exam1.html", true, thisExamJobTxt + "-单选题", {
+					examMode: thisExamMode,
+					examJob: thisExamJob,
+					examType: "radio"
+				});
+			}); 
+			$("#kuang_2").click(function(){
+				navigateTo("exam2.html", true, thisExamJobTxt + "-多选题", {
+					examMode: thisExamMode,
+					examJob: thisExamJob,
+					examType: "checkbox"
+				});
+			});
+			$("#kuang_3").click(function(){
+				navigateTo("exam3.html", true, thisExamJobTxt + "-判断题", {
+					examMode: thisExamMode,
+					examJob: thisExamJob,
+					examType: "judeg"
+				});
+			});
+		});
+	</script>
+</html>

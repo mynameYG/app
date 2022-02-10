@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/eristool.js"></script>
+		<script src="js/erisapi.js"></script>
+		
+		<style>
+			*{margin:0;padding:0;box-sizing: border-box;user-select:none; }
+			input[type="radio"] + label::before {
+			    content: "\a0"; /*不换行空格*/
+			    display: inline-block;
+			    vertical-align: middle;
+			    font-size: 18px;
+			    width: 0.8em;
+			    height: 0.8em;
+			    margin-right: .4em;
+			    border-radius: 50%;
+			    border: 1px solid #08bcb9;
+			    text-indent: .15em;
+			    line-height: 1;
+			    padding: 3px; 
+			    }
+			    input[type="radio"]:checked + label::before {
+			    background-color: #08bcb9;
+			    background-clip: content-box;
+			    /* padding: .2em; */
+			}
+			input[type="radio"] {
+			    position: absolute;
+			    clip: rect(0, 0, 0, 0);
+			}
+			label{font-weight: 100;} 
+			.content{ position: relative;}
+			.answer{ width: 500px; height: 100%; margin: auto; position: relative; padding-top: 10px;}
+			.zql{display: flex;justify-content: space-around;}
+			.rubric{ background:rgba(198,237,234,0.5) ; position: relative; width: 100%; height: 70%; border-radius: 15px;padding: 20px 30px 20px 30px;}
+			.rubric_1{text-indent: 2em;border-bottom: 1px solid #99cccc;width: 100%;margin: auto;padding-bottom: 10px; margin-bottom: 5px;}
+			.result{position: absolute; bottom: 0;margin-bottom: 10px;right: 20px; display: flex;}
+			.result_1{border: 1px dashed #00bbb4; width: 40px; height: 24px; display: inline-block; line-height: 24px;text-align: center; border-radius: 5px;}
+			.page{position: absolute;bottom: 20px;margin: auto;text-align: center;width: 100%;}
+			.page .page_top,.page .page_bottom{ display: inline-block; width: 100px; height: 30px;background: #02bbb5; color: #fff; line-height: 30px;border-radius: 5px;}
+			.result_2{display: none;}
+			/* 最终面板 */
+			.m_head {width: 200px;height: 300px;padding: 10px;position: absolute;top:50%;left: 50%;margin-top:-150px;margin-left:-100px;}
+			.m_head img{border-radius: 50%;width: 100%;height: 100%;}
+			.headimg{ color:#fff;text-align: center;  position: relative;width: 70px;height: 70px;border-radius: 50%;overflow: hidden;left: 50%;margin-left: -40px;}
+			.m_head p{color: #fff;margin-bottom:-5px;margin-top:5px;}
+			.container_wjx{	position:relative;text-align: center;  width:120px;left: 30px;}
+			.wujiaoxing1,.wujiaoxing{font-size:24px;width: 120px; }
+			.wujiaoxing{color:yellow;position: absolute; overflow: hidden; top:0px; left:6px;width:100%;height:100%;}
+			.wujiaoxing {font-size: 24px;}
+			.mycenter>p {margin: 15px 0;border-bottom: 1px dashed #fff;}
+			.m_head .noneboredr{border: none; margin:0; text-align: center;}
+			.hra{margin:0; background: #fff;} 
+			.fanhui {display: block;margin: auto;text-align: center;width: 100px;height: 30px;background: #9e9e9e;color: #fff;line-height: 30px;border-radius: 5px;text-decoration: none;}
+			.fanhui:hover {text-decoration: none;color: #fff;}
+			.admin{bottom: 0;position: absolute;left: 0; background: rgba(0, 0, 0, 0.5); width: 100%;}  
+			.mycenter p {width: 180px;}
+			.mycenter p span{
+			  width:50%;display: inline-block;
+			}
+			.mycenter p span:nth-child(1){text-align: right;}
+			.mycenter p span:nth-child(2){width:40%}
+			.mold{color: #FFD700;}
+		</style>
+		<script>
+			function HtmlLoad(){
+				$('#myModal').modal('show');
+			};
+		</script>
+	</head>
+	<body>
+		<div class="content" id="content">
+			<div class="answer" id="answer">
+				<p class="zql">
+					<span id="mold" class="mold"></span>
+					<span>正确次数：<span id="score_1">0</span></span>
+					<span>本次错误：<span id="score_2">0</span> <span id="sum">/10</span></span>
+					<span>提示次数：<span id="score_3">3</span>/3</span>
+				</p>
+				<div class="rubric">
+					<div><div class="rubric_1" id="rubric_1"> </div></div>
+					<div><input   type="radio" id="a"  value="A"  indexNum="0" /><label for="a" id="a1"></label></div>
+					<div><input  type="radio" id="b"  value="B"  indexNum="1" /><label for="b" id="b1"></label></div>
+					<div class="judeg"><input   type="radio" id="c"  value="C"  indexNum="2" /><label for="c" id="c1"></label></div>
+					<div class="judeg"><input  type="radio" id="d"  value="D"  indexNum="3" /><label for="d" id="d1"></label></div>
+					<div class="result" id="result"><span class="result_1" id="result_1">答案</span>&nbsp;&nbsp;<span class="result_2" id="result_2"></span></div>
+				</div>
+				<div class="page" id="page">
+					<span class="page_top" id="page_top">上一页</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span id="nextpage"><span class="page_bottom" id="page_bottom">下一页</span></span>
+				</div>
+			</div>
+			<!-- 最终成绩 -->
+			<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog"
+			    aria-labelledby="myModalLabel" aria-hidden="">
+				<div class="m_head">
+					<div class="headimg">
+						<img src="img/e16989a0.jpg" alt="">
+						<span class="admin">admin</span>
+					</div>
+					<p class="noneboredr"><b>实训版</b>&nbsp;&nbsp;最终成绩</p>
+	 				<div class="container_wjx">
+							<span class="wujiaoxing1">★★★★★</span>
+							<span class="wujiaoxing" id="pentagon">★★★★★</span>
+					</div>
+					<hr class="hra">
+					<div class="mycenter">
+						<p> <span>正确:</span>&nbsp;&nbsp;<span id="option_success">0</span></p>
+						<p> <span>错误:</span>&nbsp;&nbsp;<span id="option_error">0</span></p>
+						<p> <span>提示:</span>&nbsp;&nbsp;<span id="tip_number">0</span></p>
+					</div>  
+					<a class="fanhui" id="backtrack">返回</a> 
+				</div> 
+			 </div>
+		</div>
+	</body>
+	<script>
+	
+	var myQuestions = [{
+					id:1,
+					question: "1、统一按照施工单位员工管理标准，建立( )岗位序列、任职资格标准，统一做好劳保及后勤保障。在驻地建设、劳动防护、个人工具等方面施工单位统一配置，对劳务分包严格按照施工作业层班组管理，劳务作业必须在作业层班组骨干人员的组织、管控、监护下开展。",
+					answers: {
+						A: "A. 四川菜系",
+						B: "B. 山东菜系",
+						C: "C. 广东菜系",
+						D: "D. 淮扬菜系"
+					},
+					correctAnswer: "A",
+					type:"radio"  //bill为单选题
+				},
+				{	
+					id:2,
+					question: "2，红茶属于( )茶。",
+					answers: {
+						A: "A. 半发酵",
+						B: "B. 发酵",
+						C: "C. 不发酵",
+						D: "D. 微发酵"
+					},
+					correctAnswer: "A,B,C",
+					type:"checkbox"  //radio为单选题， checkbox为多选题，judeg为判断题
+				},
+				{	
+					id:3,
+					question: "3，满汉全席起兴于（ ）。",
+					answers: {
+						A: "A. 清代",
+						B: "B. 唐代"
+					},
+					correctAnswer: "A",
+					type:"judeg"
+				},
+				{	
+					id:4,
+					question: "4，和适当的范围（ ）。",
+					answers: {
+						A: "A. 火影",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "B",
+					type:"radio" 
+				},
+				{	
+					id:5,
+					question: "5，的说法是广东省房（ ）。",
+					answers: {
+						A: "A. 因缺思厅",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "A,B,C,D",
+					type:"checkbox"
+				},
+				{	
+					id:6,
+					question: "6，股份的世界观弄（ ）。",
+					answers: {
+						A: "A. 奥利给",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "C",
+					type:"radio"
+				},
+				{	
+					id:7,
+					question: "7，个，热乐购买了开幕式dlk（ ）。",
+					answers: {
+						A: "A. 西游",
+						B: "B. 清代"
+					},
+					correctAnswer: "B",
+					type:"judeg" 
+				},
+				{	
+					id:8,
+					question: "8，FFFFFFFFFFFFFFFFFFFFFFF（ ）。",
+					answers: {
+						A: "A. 水浒",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "A",
+					type:"radio"
+				},
+				{	
+					id:9,
+					question: "9，法人个人噶（ ）。",
+					answers: {
+						A: "A. 红楼",
+						B: "B. 清代"
+					},
+					correctAnswer: "A",
+					type:"judeg"
+				},
+				{	
+					id:10,
+					question: "10，第三个风格化如果（ ）。",
+					answers: {
+						A: "A. 三国",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "B,C,D",
+					type:"checkbox"
+				},{
+					id:11,
+					question: "11、统一按照施工单位员工管理标准，建立( )岗位序列、任职资格标准，统一做好劳保及后勤保障。在驻地建设、劳动防护、个人工具等方面施工单位统一配置，对劳务分包严格按照施工作业层班组管理，劳务作业必须在作业层班组骨干人员的组织、管控、监护下开展。",
+					answers: {
+						A: "A. 四川菜系",
+						B: "B. 山东菜系",
+						C: "C. 广东菜系",
+						D: "D. 淮扬菜系"
+					},
+					correctAnswer: "A",
+					type:"radio"  //bill为单选题
+				},
+				{	
+					id:12,
+					question: "12，红茶属于( )茶。",
+					answers: {
+						A: "A. 半发酵",
+						B: "B. 发酵",
+						C: "C. 不发酵",
+						D: "D. 微发酵"
+					},
+					correctAnswer: "A,B,C",
+					type:"checkbox"  //radio为单选题， checkbox为多选题，judeg为判断题
+				},
+				{	
+					id:13,
+					question: "13，满汉全席起兴于（ ）。",
+					answers: {
+						A: "A. 清代",
+						B: "B. 唐代"
+					},
+					correctAnswer: "A",
+					type:"judeg"
+				},
+				{	
+					id:14,
+					question: "14，和适当的范围（ ）。",
+					answers: {
+						A: "A. 火影",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "B",
+					type:"radio" 
+				},
+				{	
+					id:15,
+					question: "15，的说法是广东省房（ ）。",
+					answers: {
+						A: "A. 因缺思厅",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "A,B,C,D",
+					type:"checkbox"
+				},
+				{	
+					id:16,
+					question: "16，股份的世界观弄（ ）。",
+					answers: {
+						A: "A. 奥利给",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "C",
+					type:"radio"
+				},
+				{	
+					id:17,
+					question: "17，个，热乐购买了开幕式dlk（ ）。",
+					answers: {
+						A: "A. 西游",
+						B: "B. 清代"
+					},
+					correctAnswer: "B",
+					type:"judeg" 
+				},
+				{	
+					id:18,
+					question: "18，FFFFFFFFFFFFFFFFFFFFFFF（ ）。",
+					answers: {
+						A: "A. 水浒",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "A",
+					type:"radio"
+				},
+				{	
+					id:19,
+					question: "19，法人个人噶（ ）。",
+					answers: {
+						A: "A. 红楼",
+						B: "B. 清代"
+					},
+					correctAnswer: "A",
+					type:"judeg"
+				},
+				{	
+					id:20,
+					question: "20，第三个风格化如果（ ）。",
+					answers: {
+						A: "A. 三国",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "B,C,D",
+					type:"checkbox"
+				},{
+					id:21,
+					question: "21、统一按照施工单位员工管理标准，建立( )岗位序列、任职资格标准，统一做好劳保及后勤保障。在驻地建设、劳动防护、个人工具等方面施工单位统一配置，对劳务分包严格按照施工作业层班组管理，劳务作业必须在作业层班组骨干人员的组织、管控、监护下开展。",
+					answers: {
+						A: "A. 四川菜系",
+						B: "B. 山东菜系",
+						C: "C. 广东菜系",
+						D: "D. 淮扬菜系"
+					},
+					correctAnswer: "A",
+					type:"radio"  //bill为单选题
+				},
+				{	
+					id:22,
+					question: "22，红茶属于( )茶。",
+					answers: {
+						A: "A. 半发酵",
+						B: "B. 发酵",
+						C: "C. 不发酵",
+						D: "D. 微发酵"
+					},
+					correctAnswer: "A,B,C",
+					type:"checkbox"  //radio为单选题， checkbox为多选题，judeg为判断题
+				},
+				{	
+					id:23,
+					question: "23，满汉全席起兴于（ ）。",
+					answers: {
+						A: "A. 清代",
+						B: "B. 唐代"
+					},
+					correctAnswer: "A",
+					type:"judeg"
+				},
+				{	
+					id:24,
+					question: "24，和适当的范围（ ）。",
+					answers: {
+						A: "A. 火影",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "B",
+					type:"radio" 
+				},
+				{	
+					id:25,
+					question: "25，的说法是广东省房（ ）。",
+					answers: {
+						A: "A. 因缺思厅",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "A,B,C,D",
+					type:"checkbox"
+				},
+				{	
+					id:26,
+					question: "26，股份的世界观弄（ ）。",
+					answers: {
+						A: "A. 奥利给",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "C",
+					type:"radio"
+				},
+				{	
+					id:27,
+					question: "27，个，热乐购买了开幕式dlk（ ）。",
+					answers: {
+						A: "A. 西游",
+						B: "B. 清代"
+					},
+					correctAnswer: "B",
+					type:"judeg" 
+				},
+				{	
+					id:28,
+					question: "28，FFFFFFFFFFFFFFFFFFFFFFF（ ）。",
+					answers: {
+						A: "A. 水浒",
+						B: "B. 清代",
+						C: "C. 清代",
+						D: "D. 两汉"
+					},
+					correctAnswer: "A",
+					type:"radio"
+				},
+				{	
+					id:29,
+					question: "29，法人个人噶（ ）。",
+					answers: {
+						A: "A. 红楼",
+						B: "B. 清代"
+					},
+					correctAnswer: "A",
+					type:"judeg"
+				},
+				{
+					id:30,
+					question: "30，个，热乐购买了开幕式dlk（ ）。",
+					answers: {
+						A: "A. 西游",
+						B: "B. 清代"
+					},
+					correctAnswer: "B",
+					type:"judeg" 
+				}];
+	</script>
+	<script src="js/exam.js"></script>
+</html>

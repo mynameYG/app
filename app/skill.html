@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+    <script type="text/javascript">
+   		document.addEventListener('plusready', function(){
+   			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+   		});	
+    </script>
+	<style>
+	    *{ margin: 0; padding: 0; box-sizing: border-box; color: #fff;}
+		.concent{position: relative;background: #eee;}
+		.seek{padding-top: 6px; }
+		.input-group{width: 50%;  margin: auto;}
+		.form-control{border: solid #00BBB4;}
+		.input-group-addon{background: #00BBB4; border:1px solid #00BBB4}
+		.column{width: 70%; margin:auto; display: flex; justify-content: space-between;}
+		.column>span{display: block; color:#000000; background :#cccccb; width: 80px; text-align: center;border-radius: 15px; height: 20px;}
+		.article{width: 75%; height: 80%; margin: auto;position: relative; margin-top: 16px;border-radius: 10px;background: rgba(198,237,234,0.7);padding: 10px;}
+		.article>div{width: 100%;height: 100%; display: none;}
+		.article>.active{display: block;}
+		.column>.carry{background: #00BBB4; color: #fff;}
+		.list>p{color: #00BBB4; margin: 0;font-size: 11px;}
+		.info{ display: flex; padding: 0 10px; border-bottom: 1px solid #b3d2cd;margin: auto; justify-content: space-between;}
+		.lefttext>p{font-size: 9px; color: #000000; margin: 0;text-indent: 2em; }
+		.rightimg>img{width: 100%;height: 100%;}
+		.lefttext{width: 77%;}
+		.rightimg{width: 22%;}
+		.naver{overflow-x: hidden;overflow-y: scroll;}
+	</style>
+</head>
+<body>
+	<div class="concent" id="concent">
+		<div id="seek" class="seek">
+			<div class="input-group input-group-sm">
+				<input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="请输入你要搜索的内容">
+				<span class="input-group-addon"> <img src="img/sousuo.png" alt=""> </span>
+			</div>
+		</div>  
+		<div class="skill" id="skill">
+			<div class="column" id="column">
+				<span class="carry">发文</span>
+				<span>规程</span> 
+				<span>标准</span> 
+				<span>线路施工</span> 
+			</div>
+			<div class="article" id="article">
+				<div class="active naver">
+					<div class="list" id="list_1">
+						<p>1、国家电网十二配套政策</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									“这是公司用改革的办法破解影响施工安全的难题，用壮士断腕的决心推进改革。”日前，国
+									家电网公司出台“深化基建队伍改革、强化施工安全管理”12项配套政策。
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/002s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list" id="list_2">
+						<p>2、国网基建改革十二项配套措施百问百答手册</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									. 应掌握的基本规定; (一)施工现场停工“五条红线”1.现场关键人员配置严重不到位。2.
+									现场“一措施一-方案一-张票” 存在严重错误。3.现场施工装备存在重大安全隐患。4.现场安全风险
+									管控严重不到位。5.现场过程质量管控严重不到位。
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/001s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list" id="list_3">
+						<p>3、国家电网公司基建安全管理规定</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为贯彻“安全第一、预防为主、综合治理”的安全生产方针,落实《中
+								   华人民共和国安全生产法》、《建设工程安全生产管理条例》等有关安全生产的法律、法规和标准
+								   依据国家电网公司(以下简称公司)大建设” 体系建设和安全工作要求， 为进一步规范公司
+								   系统基建安全管理工作，保证建设工程安全和从业人员安全健康，制定本规定。
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/003s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list">
+						<p>4、陕西送变电工程有限公司深化基建队伍改革、强化施工安全管理十二项配套政策宣传手册</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									前言“深化基建队伍改革、强化施工安全管理”12项配套政策
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/004s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list">
+						<p>5、国家电网公司输变电工程施工安全风险识别、评估及预控措施管理办法</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为坚持安全发展理念，贯彻落实“安全第一、预防为主、综合治理”的安
+									全工作方针，规范国家电网公司(以下简称“公司”)输变电工程施工安全风险过程管理，根据《
+									中华人民共和国安全生产法》、《建设工程安全生产管理条例》等国家现行安全生产法律、法规
+									以及《国家电网公司安全风险管理工作基
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/005s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+				<div class="naver"> 
+
+					<div class="list">
+						<p>1、陕西送变电工程有限公司线路工程作业层班组标准化建设手册</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章作业层班组人员配置作业层班组是开展线路工程施工作业的基本组织单元，由骨干人员
+									和一般作业人员组成，人员保持相对固定，具备独立完成相应作业的能力。组塔、架线作业层班组
+									陕西沈变电工社白限公司
+									战路程作业层联组标准化建手册
+									基本构架如下图1-1、1-2所示。
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/006s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					
+					<div class="list">
+						<p>5、国家电网公司输变电工程施工安全风险识别、评估及预控措施管理办法</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为坚持安全发展理念，贯彻落实“安全第一、预防为主、综合治理”的安
+									全工作方针，规范国家电网公司(以下简称“公司”)输变电工程施工安全风险过程管理，根据《
+									中华人民共和国安全生产法》、《建设工程安全生产管理条例》等国家现行安全生产法律、法规
+									以及《国家电网公司安全风险管理工作基
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/005s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list">
+						<p>5、国家电网公司输变电工程施工安全风险识别、评估及预控措施管理办法</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为坚持安全发展理念，贯彻落实“安全第一、预防为主、综合治理”的安
+									全工作方针，规范国家电网公司(以下简称“公司”)输变电工程施工安全风险过程管理，根据《
+									中华人民共和国安全生产法》、《建设工程安全生产管理条例》等国家现行安全生产法律、法规
+									以及《国家电网公司安全风险管理工作基
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/005s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list">
+						<p>5、国家电网公司输变电工程施工安全风险识别、评估及预控措施管理办法</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为坚持安全发展理念，贯彻落实“安全第一、预防为主、综合治理”的安
+									全工作方针，规范国家电网公司(以下简称“公司”)输变电工程施工安全风险过程管理，根据《
+									中华人民共和国安全生产法》、《建设工程安全生产管理条例》等国家现行安全生产法律、法规
+									以及《国家电网公司安全风险管理工作基
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/005s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				
+				<div class="naver">
+					
+					<div class="list">
+						<p>7、国家电网公司输变电工程安全文明施工标准化管理办法</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为规范国家电网公司(以下简称“公司”)输变电工程现场安全文明施工
+									管理，全面推行标准化建设，规范安全作业环境，倡导绿色施工，保障施工作业人员的安全健康
+									依据国家、行业有关安全文明施工、建设与环境保护的法律、法规和《国家电网公司基建安全管
+									理规定》，结合输变电工程建设具体情况，制定本办法。
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/007s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+				</div>
+				<div class="naver">
+					
+					<div class="list">
+						<p>8、国网公司施工作业五条红线</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									1.施工单位“以包代管”，分包人员自行作业，现场业主、施工、监理三个项目部管理严重缺
+									位。3.现场施工装备及工器具没有进行作业前检查、未定期试验检测，存在较大缺陷和重大安全隐
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/005s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list">
+						<p>5、国家电网公司输变电工程施工安全风险识别、评估及预控措施管理办法</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为坚持安全发展理念，贯彻落实“安全第一、预防为主、综合治理”的安
+									全工作方针，规范国家电网公司(以下简称“公司”)输变电工程施工安全风险过程管理，根据《
+									中华人民共和国安全生产法》、《建设工程安全生产管理条例》等国家现行安全生产法律、法规
+									以及《国家电网公司安全风险管理工作基
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/005s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list">
+						<p>5、国家电网公司输变电工程施工安全风险识别、评估及预控措施管理办法</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									第一章总则第一条为坚持安全发展理念，贯彻落实“安全第一、预防为主、综合治理”的安
+									全工作方针，规范国家电网公司(以下简称“公司”)输变电工程施工安全风险过程管理，根据《
+									中华人民共和国安全生产法》、《建设工程安全生产管理条例》等国家现行安全生产法律、法规
+									以及《国家电网公司安全风险管理工作基
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/005s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+					<div class="list">
+						<p>9、输电线路工程施工现场关键点作业安全管控措施</p>
+						<div class="info">
+							<div class="lefttext">
+								<p>
+									前言为吸取事故教训， 针对输变电工程可能发生人身事故的施工现场关键点作业，制定切实
+									可行的安全管控措施，强力遏制人身事故多发势头，重建基建安全稳定局面，公司组织行业专家集
+									中编制，并经广泛征求各方面意见后，最终形成本措施。
+								</p>
+							</div>
+							<div class="rightimg">
+								<img src="img/adv/003s.png" alt="">
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
+	</div>
+	<script>
+		document.addEventListener('plusready', function(){
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var concent = $("#concent");
+			var seek = $("#seek");
+			var skill = $("#skill");
+			var column = $("#column>span");
+			var article = $("#article");
+			var seekheight = height * 0.15; 
+			var skillheight = height * 0.85;
+			var list_1 = $("#list_1");
+			var list_2 = $("#list_2");
+			var list_3 = $("#list_3");
+			concent.css({"width":width,"height":height});	
+			seek.css("height",seekheight + "px");
+			skill.css("height",skillheight + "px");
+		    
+			column.click(function(){
+				$(this).addClass("carry").siblings().removeClass("carry");
+				var index = $(this).index();
+				$(article.find('.naver')[index]).addClass("active").siblings().removeClass('active')
+			});
+			
+			list_1.click(function(){
+				navigateTo("pdf/web/viewer.html", false, null, null);
+			});
+			
+			list_2.click(function(){
+				navigateTo("word.html", true, "Word文档", null);
+			});
+			
+			list_3.click(function(){
+				navigateTo("excel.html", true, "Excel表格", null);
+			});
+			
+		});
+	</script>
+</body>
+</html>
+

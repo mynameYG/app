@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/eristool.js"></script>
+		<script src="js/erisapi.js"></script>
+		
+		<style>
+	*{margin:0;padding:0;box-sizing: border-box;user-select:none; }
+	input[type="radio"] + label::before {
+	    content: "\a0"; /*不换行空格*/
+	    display: inline-block;
+	    vertical-align: middle;
+	    font-size: 18px;
+	    width: 0.8em;
+	    height: 0.8em;
+	    margin-right: .4em;
+	    border-radius: 50%;
+	    border: 1px solid #08bcb9;
+	    text-indent: .15em;
+	    line-height: 1;
+	    padding: 3px; 
+	    }
+	    input[type="radio"]:checked + label::before {
+	    background-color: #08bcb9;
+	    background-clip: content-box;
+	    /* padding: .2em; */
+	}
+	input[type="radio"] {
+	    position: absolute;
+	    clip: rect(0, 0, 0, 0);
+	}
+	label{font-weight: 100;} 
+	.content{ position: relative;}
+	.answer{ width: 500px; height: 100%; margin: auto; position: relative; padding-top: 10px;}
+	.zql{display: flex;justify-content: space-around;}
+	.rubric{ background:rgba(198,237,234,0.5) ; position: relative; width: 100%; height: 70%; border-radius: 15px;padding: 20px 30px 20px 30px;}
+	.rubric_1{text-indent: 2em;border-bottom: 1px solid #99cccc;width: 100%;margin: auto;padding-bottom: 10px; margin-bottom: 5px;}
+	.result{position: absolute; bottom: 0;margin-bottom: 10px;right: 20px; display: flex;}
+	.result_1{border: 1px dashed #00bbb4; width: 40px; height: 24px; display: inline-block; line-height: 24px;text-align: center; border-radius: 5px;}
+	.page{position: absolute;bottom: 20px;margin: auto;text-align: center;width: 100%;}
+	.page .page_top,.page .page_bottom{ display: inline-block; width: 100px; height: 30px;background: #02bbb5; color: #fff; line-height: 30px;border-radius: 5px;}
+	.result_2{display: none;}
+	/* 最终面板 */
+	.m_head {width: 200px;height: 300px;padding: 10px;position: absolute;top:50%;left: 50%;margin-top:-150px;margin-left:-100px;}
+	.m_head img{border-radius: 50%;width: 100%;height: 100%;}
+	.headimg{ color:#fff;text-align: center;  position: relative;width: 70px;height: 70px;border-radius: 50%;overflow: hidden;left: 50%;margin-left: -40px;}
+	.m_head p{color: #fff;margin-bottom:-5px;margin-top:5px;}
+	.container_wjx{	position:relative;text-align: center;  width:120px;left: 30px;}
+	.wujiaoxing1,.wujiaoxing{font-size:24px;width: 120px; }
+	.wujiaoxing{color:yellow;position: absolute; overflow: hidden; top:0px; left:6px;width:100%;height:100%;}
+	.wujiaoxing {font-size: 24px;}
+	.mycenter>p {margin: 15px 0;border-bottom: 1px dashed #fff;}
+	.m_head .noneboredr{border: none; margin:0; text-align: center;}
+	.hra{margin:0; background: #fff;} 
+	.fanhui {display: block;margin: auto;text-align: center;width: 100px;height: 30px;background: #9e9e9e;color: #fff;line-height: 30px;border-radius: 5px;text-decoration: none;}
+	.fanhui:hover {text-decoration: none;color: #fff;}
+	.admin{bottom: 0;position: absolute;left: 0; background: rgba(0, 0, 0, 0.5); width: 100%;}  
+	.mycenter p {width: 180px;}
+	.mycenter p span{
+	  width:50%;display: inline-block;
+	}
+	.mycenter p span:nth-child(1){text-align: right;}
+	.mycenter p span:nth-child(2){width:40%}
+	.mold{color: #FFD700;}
+		</style>
+		<script>
+			function HtmlLoad(){
+				$('#myModal').modal('show');
+			};
+		</script>
+	</head>
+	
+	<body>
+		<div class="content" id="content">
+			<div class="answer" id="answer">
+				<p class="zql">
+					<span id="mold" class="mold"></span>
+					<span>正确次数：<span id="score_1">0</span></span>
+					<span>本次错误：<span id="score_2">0</span> <span id="sum">/10</span></span>
+					<span>提示次数：<span id="score_3">3</span>/3</span>
+				</p>
+				<div class="rubric">
+					<div class="timu"> <p class="rubric_1" id="rubric_1"> </p></div>
+					<div><input   type="radio" id="a"  value="A"  indexNum="0" /><label for="a" id="a1"></label></div>
+					<div><input  type="radio" id="b"  value="B"  indexNum="1" /><label for="b" id="b1"></label></div>
+					<div class="judeg"><input   type="radio" id="c"  value="C"  indexNum="2" /><label for="c" id="c1"></label></div>
+					<div class="judeg"><input  type="radio" id="d"  value="D"  indexNum="3" /><label for="d" id="d1"></label></div>
+						<div class="result" id="result"><span class="result_1" id="result_1">答案</span>&nbsp;&nbsp;<span class="result_2" id="result_2"></span></div>
+				</div>
+				<div class="page" id="page">
+					<span class="page_top" id="page_top">上一页</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<span id="nextpage"><span class="page_bottom" id="page_bottom">下一页</span></span>
+				</div>
+			</div>
+			<!-- 最终成绩 -->
+			<div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog"
+			    aria-labelledby="myModalLabel" aria-hidden="">
+				<div class="m_head">
+					<div class="headimg">
+						<img src="img/e16989a0.jpg" alt="">
+						<span class="admin">admin</span>
+					</div>
+					<p class="noneboredr"><b>实训版</b>&nbsp;&nbsp;最终成绩</p>
+					<div class="container_wjx">
+							<span class="wujiaoxing1">★★★★★</span>
+							<span class="wujiaoxing" id="pentagon">★★★★★</span>
+					</div>
+					<hr class="hra">
+					<div class="mycenter">
+						<p> <span>正确:</span>&nbsp;&nbsp;<span id="option_success">0</span></p>
+						<p> <span>错误:</span>&nbsp;&nbsp;<span id="option_error">0</span></p>
+						<p> <span>提示:</span>&nbsp;&nbsp;<span id="tip_number">0</span></p>
+					</div>  
+					<a class="fanhui" id="backtrack">返回</a> 
+				</div> 
+			 </div>
+		</div>
+	</body>
+	<script> 
+	var myQuestions = [{
+	                id:1, 
+					question: "1、AAAAAAAAAAAAAAAAAAAAAAAAAAA。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,B,C",
+					type:"checkbox"  
+				},{
+	                id:2, 
+					question: "2、BBBBBBBBBBBBBBBBBBB。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,C,D",
+					type:"checkbox"  
+				},{
+	                id:3, 
+					question: "3、CCCCCCCCCCCCCCCCCCCC。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "B,C,D",
+					type:"checkbox"  
+				},{
+	                id:4, 
+					question: "4、DDDDDDDDDDDDDDDDD。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "C,D",
+					type:"checkbox"  
+				},{
+	                id:5, 
+					question: "5、EEEEEEEEEEEEEEEEEEEEE。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,B,C,D",
+					type:"checkbox"  
+				},{
+	                id:6, 
+					question: "6、FFFFFFFFFFFFFFFF。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,D",
+					type:"checkbox"  
+				},{
+	                id:7, 
+					question: "7、GGGGGGGGGGGGGGGGGGGG。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,B,D",
+					type:"checkbox"  
+				},{
+	                id:8, 
+					question: "8、HHHHHHHHHHHHHHHHHHHHHHHHHHHH。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,B,C,D",
+					type:"checkbox"  
+				},{
+	                id:9, 
+					question: "9、IIIIIIIIIIIIIIIIIIII。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,B,D",
+					type:"checkbox"  
+				},{
+	                id:10, 
+					question: "10、JJJJJJJJJJJJJJJJJJ。",
+					answers: {
+						A: "A. 11111111",
+						B: "B. 22222222",
+						C: "C. 33333333",
+						D: "D. 44444444"
+					},
+					correctAnswer: "A,C",
+					type:"checkbox"  
+				}];
+				
+			// 	document.addEventListener('plusready', function() {
+			// 				var width = window.innerWidth;
+			// 				var height = window.innerHeight;
+			// 				var content = $("#content");
+			// 				var page_bottom = $("#page_bottom");
+			// 				var page_top = $("#page_top");
+			// 				var rubric_1 = $("#rubric_1");
+			// 				var indexes = $("#indexes");
+			// 				var a = $("#a1");
+			// 				var b = $("#b1");
+			// 				var c = $("#c1");
+			// 				var d = $("#d1");
+			// 				var abcd = $("#a,#b,#c,#d");
+			// 				var result_2 = $("#result_2");
+			// 				var myradio = $('input:radio[type="radio"]');
+			// 				var score_1 = $("#score_1");
+			// 				var score_2 = $("#score_2");
+			// 				var score_3 = $("#score_3");
+			// 				var option_success = $("#option_success");
+			// 				var option_error = $("#option_error");
+			// 				var tip_number = $("#tip_number");
+			// 				var pentagon = $("#pentagon");
+			// 				var nextpage = $("#nextpage");
+			// 				var backtrack = $("#backtrack");
+			// 				var preIndex = [];
+			// 				var checked = [];
+			// 				var sum = $("#sum");
+			// 				var page = $("#page");
+			// 				var mold = $("#mold");
+			// 				content.css({
+			// 					"width": width,
+			// 					"height": height
+			// 				});
+			// 				var number = myQuestions.length;
+			// 				sum.html("/" + number);
+			// 				var err = 0;
+			// 				var ok = 0;
+			// 				var hint = 3;
+			// 				//加载题目
+			// 				var sn = 1;
+			// 				var onoff = true;
+			// 				var exchange = true;
+			// 				function mytitle(url, index, aa, bb, cc, dd) {
+			// 					if (!(preIndex && sn && preIndex[sn])) {
+			// 						onoff = true;
+			// 					}
+			// 					rubric_1.html(url);
+			// 					indexes.html(index);
+			// 					a.html(aa);
+			// 					b.html(bb);
+			// 					c.html(cc);
+			// 					d.html(dd);
+			// 					checked = [];
+			// 					$('input').prop('checked', false);
+			// 					$('input').prop('disabled', false);
+			// 					if (myQuestions[sn - 1].type == "radio") {
+			// 						mold.html("单选题");
+			// 						for (var i = 0; i < $('input').length; i++) {
+			// 							$($('input')[i]).attr('type', 'radio');
+			// 						}
+			// 						$(".judeg").css("display", "block");
+			// 					} else if (myQuestions[sn - 1].type == "checkbox") {
+			// 						mold.html("多选题");
+			// 						if (!preIndex[sn]) {
+			// 							$('input').prop('disabled', false);
+			// 						}
+			// 						for (var i = 0; i < $('input').length; i++) {
+			// 							$($('input')[i]).attr('type', 'radio');
+			// 						}
+			// 						$(".judeg").css("display", "block");
+			// 					} else if (myQuestions[sn - 1].type == "judeg") {
+			// 						mold.html("判断题");
+			// 						for (var i = 0; i < $('input').length; i++) {
+			// 							$($('input')[i]).attr('type', 'radio');
+			// 						}
+			// 						$(".judeg").css("display", "none");
+			// 					}
+			// 				};
+			// 				//序号
+			// 				var info = null;
+			// 				function choice(sn) {
+			// 					if (sn < 1 || sn > myQuestions.length) {
+			// 						return;
+			// 					};
+			// 					for (var i = 0; i < myQuestions.length; i++) {
+			// 						if (myQuestions[i].id === sn) {
+			// 							info = myQuestions[i];
+			// 						}
+			// 					}
+			// 					mytitle(info.question, info.id, info.answers.A, info.answers.B, info.answers.C, info.answers.D);
+			// 				};
+			// 				choice(sn);
+			// 				var list = $('input:radio[type="radio"]:checked').val();
+			// 				myradio.on('change', function() {
+			// 					if (myQuestions[sn - 1].type == "checkbox") {
+			// 						if (!preIndex[sn]) {
+			// 							preIndex[sn] = [];
+			// 						}
+			// 						preIndex[sn].push($(this).attr("indexNum"));
+			// 					} else {
+			// 						preIndex[sn] = $(this).attr("indexNum");
+			// 					}
+			// 					if (myQuestions[sn - 1].type != "checkbox") {
+			// 						myradio.attr("disabled", true);
+			// 					}
+			// 					if (myQuestions[sn - 1].type != 'checkbox') { //单选或者判断题
+			// 						if ($('input:radio[type="radio"]:checked').val() == myQuestions[sn - 1].correctAnswer) {
+			// 							setTimeout(function() {
+			// 								page_bottom.trigger('click');
+			// 							}, 1000);
+			// 							ok++;
+			// 							score_1.html(ok);
+			// 							option_success.html(ok);
+			// 						} else {
+			// 							err++;
+			// 							score_2.html(err);
+			// 							option_error.html(err);
+			// 							result_2.css({
+			// 								"display": "block",
+			// 								"color": "red"
+			// 							});
+			// 							result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 							$("#pentagon").css("width", (number - err) / number * 100 + "%");
+			// 						}
+			// 					} else { //多选
+			// 						var answer = myQuestions[sn - 1].correctAnswer;
+			// 						if (answer.length > 1) {
+			// 							answer = answer.split(',');
+			// 						}
+			// 						var length = answer.length //正确答案的个数
+			// 						var checkAnswer = $(this).val();
+			// 						checked.push($(this).val());
+			// 						var flag = false
+			// 						for (var j = 0; j < length; j++) { //遍历正确答案数组    
+			// 							if (checkAnswer == answer[j]) { //当前选择为正确答案
+			// 								flag = true;
+			// 							}
+			// 						}
+			// 						if (!flag) { //如果标志位为false 则表示当前用户选择的答案无法和正确的答案集匹配,停止答题
+			// 							$('input').attr('disabled', true);
+			// 							err++;
+			// 							score_2.html(err);
+			// 							option_error.html(err);
+			// 							result_2.css({
+			// 								"display": "block",
+			// 								"color": "red"
+			// 							});
+			// 							result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 							$("#pentagon").css("width", (number - err) / number * 100 + "%")
+			// 							return;
+			// 						}
+			// 						if (checked.length == length) { //用户全部命中答案
+			// 							$('input').attr('disabled', true); //禁止操作
+			// 							setTimeout(function() {
+			// 								page_bottom.trigger('click');
+			// 							}, 1000);
+			// 							ok++;
+			// 							score_1.html(ok);
+			// 							option_success.html(ok);
+			// 						}
+			// 					}
+			// 				});
+			// 				//上一页
+			// 				page_top.click(function() {
+			// 					if (sn > 1) {
+			// 						sn--;
+			// 					}
+			// 					nextpage.html('<span class="page_bottom" id="page_bottom">下一页</span>');
+			// 					choice(sn);
+			// 					if (myQuestions[sn - 1].type != 'checkbox') {
+			// 						if (preIndex && sn) { //还原
+			// 							var checkedAnswer = preIndex[sn]; //获取preIndex对应题下的下标
+			// 							$(myradio[checkedAnswer]).prop('checked', true);
+			// 							myradio.attr("disabled", true);
+			// 							result_2.css('display', 'block');
+			// 							result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 						}
+			// 					} else {
+			// 						if (preIndex && sn && preIndex[sn]) {
+			// 							var answer = preIndex[sn];
+			// 							if (answer.length) {
+			// 								for (var i = 0; i < answer.length; i++) {
+			// 									$(myradio[answer[i]]).prop('checked', true);
+			// 									myradio.attr('disabled', true);
+			// 								}
+			// 							}
+			// 							result_2.css({
+			// 								'display': 'block',
+			// 								'color': 'red'
+			// 							});
+			// 							result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 						}
+			// 					}
+			// 				});
+			// 				//下一页
+			// 				page.on('click','#page_bottom', function() {
+			// 					if (sn == number) {
+			// 						nextpage.html('<span class="page_bottom" onclick="HtmlLoad()">完成</span>');
+			// 					}
+			// 					result_2.css('display', 'none');
+			// 					if (myQuestions[sn - 1].type != 'checkbox') {
+			// 						var list = $('input:radio[type="radio"]:checked').val();
+			// 						if (list) {
+			// 							if (sn < myQuestions.length) {
+			// 								sn++;
+			// 								choice(sn);
+			// 							}
+			// 						}
+			// 						if (myQuestions[sn - 1].type != 'checkbox') {
+			// 							if (preIndex && sn && preIndex[sn]) {
+			// 								var checkedAnswer = preIndex[sn];
+			// 								$(myradio[checkedAnswer]).prop('checked', true);
+			// 								myradio.attr('disabled', true);
+			// 								result_2.css('display', 'block');
+			// 								result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 							} else {
+			// 								// var list = $('input:radio[type="radio"]:checked').val(); 
+			// 								// $('input:radio[value = '+list+']').prop('checked',false);
+			// 								myradio.attr('disabled', false);
+			// 								myradio.prop('checked', false);
+			// 							}
+			// 						} else {
+			// 							if (preIndex && sn && preIndex[sn]) {
+			// 								var answer = preIndex[sn];
+			// 								if (answer.length) {
+			// 									for (var i = 0; i < answer.length; i++) {
+			// 										$(myradio[answer[i]]).prop('checked', true);
+			// 										checked.push(answer[i]);
+			// 										myradio.attr('disabled', true);
+			// 									}
+			// 									result_2.css({
+			// 										'display': 'block',
+			// 										'color': 'red'
+			// 									});
+			// 									result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 								}
+			// 							}
+			// 						}
+			// 					} else { //多选
+			// 						var list = $('input:radio[type="radio"]:checked').val();
+			// 						if (list) {
+			// 							if (checked) {
+			// 								if (sn < myQuestions.length) {
+			// 									sn++;
+			// 									choice(sn);
+			// 								}
+			// 							}
+			// 						}
+									
+			// 						if (myQuestions[sn - 1].type != 'checkbox') {
+			// 							if (preIndex && sn && preIndex[sn]) {
+			// 								var checkedAnswer = preIndex[sn];
+			// 								$(myradio[checkedAnswer]).prop('checked', true);
+			// 								myradio.attr('disabled', true);
+			// 								result_2.css('display', 'block');
+			// 								result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 							} else {
+			// 								myradio.attr('disabled', false);
+			// 								myradio.prop('checked', false);
+			// 							}
+			// 						} else {
+			// 							if (preIndex && sn && preIndex[sn]) {
+			// 								var answer = preIndex[sn];
+			// 								if (answer.length) {
+			// 									for (var i = 0; i < answer.length; i++) {
+			// 										$(myradio[answer[i]]).prop('checked', true);
+			// 										checked.push(answer[i]);
+			// 										myradio.attr('disabled', true);
+			// 									}
+			// 									result_2.css({
+			// 										"display": "block",
+			// 										"color": "red"
+			// 									});
+			// 									result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 								}
+			// 							}
+			// 						}
+			// 					}
+			// 				});
+							
+			// 				// 点击答案提示正确答案
+			// 				$("#result_1").click(function() {
+			// 					if (onoff) {
+			// 						if (hint > 0) {
+			// 							result_2.css({
+			// 								'display': 'block',
+			// 								'color': 'red'
+			// 							});
+			// 							result_2.html(myQuestions[sn - 1].correctAnswer);
+			// 							hint--;
+			// 							score_3.html(hint);
+			// 							tip_number.html(3 - hint);
+			// 						}
+			// 					}
+			// 					onoff = false;
+			// 				});
+							
+			// 	            backtrack.click(function(){
+			// 					navigateBack();
+			// 				});
+							
+			// 				function HtmlLoad() {
+			// 					$('#myModal').modal('show');
+			// 				};
+							
+			// });
+
+	</script>
+	 <script src="js/exam.js"></script> 
+</html>
+
+

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+    <script type="text/javascript">
+   		document.addEventListener('plusready', function(){
+   			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+   		});	
+    </script>
+	<style>
+	    * { margin: 0; padding: 0; box-sizing: border-box; color: #fff;}
+		.concent{position: relative; background:url(img/timg.jpg) no-repeat ; background-size: cover;}
+	    .select{position: absolute; width:500px; height: 104px;left: 50%;top: 50%; margin-left: -250px;margin-top: -60px; display:flex;justify-content: space-between; } 
+	    .select>div{width: 42%; height: 100%;  color: #04786D;text-align: center; font-weight: bolder;font-size: 28px;};
+		.select>div>p{margin-top: 10px;}
+	</style>
+</head>
+<body>
+	 <div class="concent" id="concent">
+		<div class="select"> 
+			<div id="exam">
+				<img src="img/exam.png" alt="">
+				<p>考试模式</p>
+			</div>
+			<div id="study">
+				<img src="img/lianxi.png" alt="">
+				<p>学习模式</p>
+			</div>
+		</div>
+	 </div>
+	<script>
+		document.addEventListener('plusready', function(){
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var study = $("#study");
+			var exam = $("#exam");
+			var concent = $("#concent");
+			concent.css({"width":width,"height":height});
+			study.click(function(){
+				navigateTo("exam.html", true, "学习模式", {
+					examMode: "study"
+				});
+			});
+			
+			exam.click(function(){
+				navigateTo("exam.html", true, "考试模式", {
+					examMode: "exam"
+				});
+			});
+			
+		});
+	</script>
+</body>
+</html>

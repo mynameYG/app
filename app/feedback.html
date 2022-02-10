@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+    <script type="text/javascript">
+   		document.addEventListener('plusready', function(){
+   			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+   		});	
+    </script>
+	<style>
+	    *{ margin: 0; padding: 0; box-sizing: border-box; }
+		.content{ position: relative;} 
+		.textfeed{width: 100%; height: 200px;}
+		.send{text-align: center;margin:auto; width: 100px;height:35px;background: #00796A;color: #fff;font-size: 20px;line-height: 35px;}
+	</style>
+</head>
+<body>
+	<div class="content" id="content">
+	  <textarea class="textfeed" id="textfeed">
+	  	
+	  </textarea>
+	  <p class="send" id="send">发送</p>
+	</div>
+	<script>
+		document.addEventListener('plusready', function(){
+			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var content = $("#content");
+			content.css({"width":width,"height":height});
+			var message = $("#message");
+			message.click(function(){
+				navigateTo("message.html", true, "个人信息", null);
+			});
+			var goback = $("#goback");
+			goback.click(function(){
+				navigateTo("login.html", false, null, null);
+			});
+			var send = $("#send");
+			var textfeed = $("#textfeed");
+			send.click(function(){
+				textfeed.val(null);
+			});
+		});
+	</script>
+</body>
+</html>

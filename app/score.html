@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+	<script src="js/erisapi.js"></script>
+	<style>
+		 * { margin: 0; padding: 0; box-sizing: border-box;}
+		.concent{ position: relative; background: url(img/timg.jpg) no-repeat; color: #fff;}
+		.z_score{ text-align: center; }
+		.score_body{ position: absolute; width: 600px; height:260px; left:50%;top: 50%; margin-left: -300px; margin-top: -140px; }
+		.score_f1{ display: flex;  height: 220px; border: 1px solid #CDCDCD;}
+		.score_l{width: 40%;display: flex; flex-direction:column; justify-content:space-between; padding: 10px 20px;}
+		.score_l>div{ height: 32px; display: flex;  justify-content: space-between; border-bottom: 1px solid #CDCDCD; line-height: 32px; font-size: 16px; }
+		.score_r{width: 60%; }
+		.score_r>p{ text-align: center;height: 30px;width:49%; margin: 0; line-height: 30px;display: inline-block; }
+		.dz_jilu{width: 100%; height: 190px; overflow:auto;  white-space: nowrap; padding:5px 20px;}
+		.dz_jilu>div{ height: 30px; display: flex;justify-content: space-between; border-bottom: 1px solid #cdcdcd; line-height: 30px;}
+		.score_bg{ background: #00796A; color: #fff; }
+		.ks_exam{ width: 100%; height: 190px; overflow:auto;  white-space: nowrap; padding:5px 20px;}
+		.active{display: none;}
+		.ks_exam>div{  height: 30px; display: flex;justify-content: space-between; border-bottom: 1px solid #cdcdcd; line-height: 30px; }
+	</style>
+</head>
+
+<body>
+	<div id="concent" class="concent">
+		<div class="score_body">
+			<h4 class="z_score">总积分 ：<span id="scoreCount"></span>分</h4>
+				<div class="score_f1">
+					<div class="score_l">
+						<div>
+							<p>实训版</p>
+							<p><span id="baseTrainScore"></span>分</p>
+						</div>
+						<div>
+							<p>进阶版</p>	
+							<p><span id="advTrainScore"></span>分</p>
+						</div>
+						<div>
+							<p>拍违章上传数量</p>
+							<p><span id="filmCount"></span>次</p>
+						</div>
+					</div>
+					<div class="score_r">
+						<p id="hydz" class="score_bg">好友对战</p> <p id="exam">应知应会考试</p> 
+						<div class="dz_jilu" id="dz_jilu">
+							<div>
+								<p>对战时间</p>
+								<p>对战状况</p>
+							</div>
+						</div>
+						<div class="ks_exam active" id="ks_exam">
+							<div>
+								<p>分数</p>
+								<p>考试时间</p>
+							</div>
+						</div>
+					</div>
+				</div>
+		</div>
+	</div>
+	
+	<script>
+		document.addEventListener('plusready', function() {
+			width = window.innerWidth;
+			height = window.innerHeight;
+			var concent = $("#concent");
+			concent.css({"width":width,"height":height});
+			var hydz = $("#hydz");
+			var exam = $("#exam");
+			var dz_jilu = $("#dz_jilu");
+			var ks_exam = $("#ks_exam");
+			hydz.click(function(){
+				$(this).addClass("score_bg");
+				exam.removeClass("score_bg");
+				dz_jilu.show();
+				ks_exam.hide();
+			});
+			
+			exam.click(function(){
+				$(this).addClass("score_bg");
+				hydz.removeClass("score_bg");
+				dz_jilu.hide();
+				ks_exam.show();
+			});
+			
+			createMask(true);
+			ErisApi.GetScoreInfo(function(result) {
+				var userID = result.data.userID;
+				var score = result.data.score;
+				var fightList = result.data.fightList;
+				var examList = result.data.examList;
+				var baseTrainScore = result.data.baseTrainScore;
+				var advTrainScore = result.data.advTrainScore;
+				var filmCount = result.data.filmCount;
+				$("#scoreCount").html(score);
+				$("#baseTrainScore").html(baseTrainScore);
+				$("#advTrainScore").html(advTrainScore);
+				$("#filmCount").html(filmCount);
+				var html1 = '';
+				for (var i = 0; i < fightList.length; i++) {
+					var one = fightList[i];
+					var isFighter1 = userID == one.fighter1;
+					var f1 = isFighter1 ? one.fighter1score : one.fighter2score;
+					var f2 = isFighter1 ? one.fighter2score : one.fighter1score;
+					var ff = (f1 == f2) ? '平' : ((f1 > f2) ? '胜' : '负');
+					html1 += '<div><p>' + one.end_time + '</p><p>(' + f1 + '/' + f2 + ')' + ff + '</p></div>';
+				}
+				$("#dz_jilu").append(html1);
+				var html2 = '';
+				for (var i = 0; i < examList.length; i++) {
+					var one = examList[i];
+					html2 += '<div><p>' + one.score + '分</p><p>' + one.time + '</p></div>';
+				}
+				$("#ks_exam").append(html2);
+				createMask(false);
+			}, function(error) {
+				createMask(false);
+				showTip(true, error.msg, 2000);
+			});
+		});
+	</script>
+	
+</body>
+</html>

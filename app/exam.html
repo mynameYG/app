@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/eristool.js"></script>
+		<script src="js/erisapi.js"></script>
+		<style>
+			*{margin:0;padding:0;box-sizing: border-box;}
+			input[type="radio"] + label::before {
+			    content: "\a0"; /*不换行空格*/
+			    display: inline-block;
+			    vertical-align: middle;
+			    font-size: 18px;
+			    width: 0.8em;
+			    height: 0.8em;
+			    margin-right: .4em;
+			    border-radius: 50%;
+			    border: 1px solid #08bcb9;
+			    text-indent: .15em;
+			    line-height: 1;
+			    padding: 3px; 
+			    }
+			    input[type="radio"]:checked + label::before {
+			    background-color: #08bcb9;
+			    background-clip: content-box;
+			    /* padding: .2em; */
+			}
+			input[type="radio"] {
+			    position: absolute;
+			    clip: rect(0, 0, 0, 0);
+			}
+			label{font-weight: 100;user-select:none} 
+			.content{position: relative;}
+			.beset{ width: 400px; height: 286px;position: absolute; left: 50%; top: 50%; margin-left: -200px; margin-top: -143px;}
+			.beset_1{width: 340px; height: 240px; border-radius: 10px; margin: auto;background: rgba(198,237,234,0.5); padding: 20px  20px; display: flex; justify-content: space-between;}
+			.answer{text-align: center; width: 100px; height: 30px; line-height: 30px; color: #fff; background: #00bbb4; margin: 0 auto;margin-top: 10px; border-radius: 10px; }
+			.beset_left,.beset_right{display: flex; flex-direction: column; justify-content: space-between;}
+		</style>
+	</head>
+	<body>
+		<div class="content" id="content">
+			<div class="beset">
+				<div class="beset_1" id="beset_1">
+					<div class="beset_left">
+						<div><input type="radio" id="a" name="option" value="a" /><label for="a">班组长</label></div>
+						<div><input type="radio" id="b" name="option" value="b" /><label for="b">班组安全员</label></div>
+						<div><input type="radio" id="c" name="option" value="c" /><label for="c">架线高空作业</label></div>
+						<div><input type="radio" id="d" name="option" value="d" /><label for="d">架线作业副班长</label></div>
+						<div><input type="radio" id="e" name="option" value="e" /><label for="e">线路施工项目经理</label></div>
+						<div><input type="radio" id="f" name="option" value="f" /><label for="f">组塔绞磨操作工</label></div>
+						<div><input type="radio" id="g" name="option" value="g" /><label for="g">组塔作业副班长</label></div>
+					</div>
+					<div class="beset_right">
+						<div><input type="radio" id="h" name="option" value="h" /><label for="h">班组技术员</label></div>
+						<div><input type="radio" id="i" name="option" value="i" /><label for="i">地面线路压接工</label></div>
+						<div><input type="radio" id="j" name="option" value="j" /><label for="j">高空线路压接工</label></div>
+						<div><input type="radio" id="k" name="option" value="k" /><label for="k">业主项目经理</label></div>
+						<div><input type="radio" id="l" name="option" value="l" /><label for="l">总监</label></div>
+						<div><input type="radio" id="m" name="option" value="m" /><label for="m">组塔高空作业工</label></div>
+						<div><input type="radio" id="n" name="option" value="n" /><label for="n">组塔塔上指挥工</label></div>
+					</div>
+				</div>
+				<p class="answer" id="answer">开始答题</p>
+			</div>
+		</div>
+	</body>
+	<script>
+		document.addEventListener('plusready', function(){
+			var thisWebView = plus.webview.currentWebview();
+			var thisExamMode = thisWebView.examMode;
+			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var content = $("#content");
+			var answer = $("#answer");
+			content.css({"width":width,"height":height});
+			answer.click(function(){
+				var checked = $('input:radio[name="option"]:checked');
+				if (checked.length > 0) {
+					var txt = checked.siblings("label").html();
+					if (thisExamMode === "exam") {
+						navigateTo("exam4.html", true, txt, {
+							examMode: thisExamMode,
+							examJob: checked.val()
+						});
+					} else {
+						navigateTo("examoption.html", true, "选择题型", {
+							examMode: thisExamMode,
+							examJob: checked.val(),
+							examJobTxt: txt
+						});
+					}
+				}
+			})
+		});
+	</script>
+</html>

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+    <script type="text/javascript">
+   		document.addEventListener('plusready', function(){
+   			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+   		});	
+    </script>
+	<style>
+	    *{ margin: 0; padding: 0; box-sizing: border-box; }
+		.content{ position: relative;} 
+		.about{position: absolute;width: 420px;height: 250px;top: 50%;left:50%; margin-top: -125px; margin-left:-210px }
+		#yanzheng{
+			width:60%;
+		}
+		#once_get{
+			position:absolute;
+			width:120px;
+			height:34px;
+			text-align: center;
+			line-height: 34px;
+			font-size:14px;
+			border:1px solid #00796A;
+			box-sizing: border-box;
+			top:1px;
+		}
+		.tijiao{
+			display:block;
+			margin:auto;
+			width:50%;
+			height:34px;
+			background:#00796A;
+			text-align: center;
+			color:#fff;
+			text-decoration: none;
+			line-height: 34px;
+			font-size:20px;
+		}
+		.msg_4{
+			background: rgba(255,255,255,.5);
+			color:#f00;
+			padding:0 10px;
+			font-size: 16px;
+			border-radius: 5px;
+			margin-left: 30px;
+		}
+		[name=forget]{border-right: none;}
+		.tijiao:hover{text-decoration: none; color: #FFFFFF;}
+	</style>
+</head>
+<body>
+	<div class="content" id="content">
+	   <div class="about">
+		   <div class="input-group">
+				<span class="input-group-addon glyphicon glyphicon-phone" id="sizing-addon1"></span>
+				<input type="text" class="form-control glyphicon glyphicon-phone" placeholder="请输入手机号" name="phone" aria-describedby="sizing-addon1">
+		   </div>
+		   <span>&nbsp;</span>
+		   <div class="input-group" id="yanzheng">
+				<span class="input-group-addon glyphicon glyphicon-tag" id="sizing-addon1"></span>
+				<input type="text" class="form-control glyphicon glyphicon-tag" placeholder="请输入验证码" name="forget" aria-describedby="sizing-addon1">
+				<span onclick="getcode()" id="once_get" one="false">获取验证码</span>
+		   </div>
+		   <span>&nbsp;</span>
+		   <div class="input-group">
+				<span class="input-group-addon glyphicon glyphicon-lock" id="sizing-addon1"></span>
+				<input type="password" class="form-control glyphicon glyphicon-lock" placeholder="请输入新密码" name="1upwd" aria-describedby="sizing-addon1">
+		   </div>
+		   <span>&nbsp;</span>
+		   <div class="input-group">
+				<span class="input-group-addon glyphicon glyphicon-lock" id="sizing-addon1"></span>
+				<input type="password" class="form-control glyphicon glyphicon-lock" placeholder="请再次输入新密码" name="2upwd" aria-describedby="sizing-addon1">
+		   </div>
+		   <span>&nbsp;</span>
+		   <a href="javascript:;" class="tijiao" id="tijiao">提&nbsp;&nbsp;&nbsp;交</a>
+	   </div>
+	</div>
+	<script>
+		
+		var onceGetTime = 60;
+				function sendCode() {
+					if (onceGetTime > 1) {
+						onceGetTime--;
+						$("#once_get").html("重新获取(" + onceGetTime + ")");
+						setTimeout(arguments.callee, 1000);
+					} else {
+						$("#once_get").html("获取验证码");
+						$("#once_get").attr("one", false);
+					}
+				}
+				//发送
+				function getcode() {
+					//避免重复发  
+					if ($("#once_get").attr("one") == 'true') {
+						return false;
+					}
+					//异步获取验证码，并发送的程序，当发送成功后回调函数调用
+					//以下的代码
+					$("#once_get").attr("one", true);
+					onceGetTime = 60;
+					sendCode();
+				}
+				
+		document.addEventListener('plusready', function(){
+			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			var tijiao = $("#tijiao");
+			var width = window.innerWidth;
+			var height = window.innerHeight
+			var content = $("#content");
+			content.css({"width":width,"height":height});
+		});
+	</script>
+</body>
+</html>

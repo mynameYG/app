@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+    <script type="text/javascript">
+   		document.addEventListener('plusready', function(){
+   			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+   		});
+    </script>
+	<style>
+	    *{ margin: 0; padding: 0; box-sizing: border-box;}
+		.content{ position: relative;} 
+		.about{position: absolute; width: 510px;height: 300px; padding: 30px 0;
+		 left: 50%; top:50%; margin-left: -255px;margin-top: -150px;}
+		 .about>div{width: 50%; height: 100%; }
+		 .about_1{float: left;display: flex; justify-content: space-around; flex-direction: column;}
+		 .about_1>p {font-size: 18px;font-weight: bold;}
+		 .about_1>p img{margin-bottom: 3px;}
+		 .about_2{float: right; position: relative;}
+		 .about_2>img{position: absolute;left: 50%;top: 50%;margin-left: -72px;margin-top:-72px}
+	</style>
+</head>
+<body>
+	<div class="content" id="content">
+	   <div class="about">
+		   <div class="about_1">
+			   <p id="message"><img src="img/sx/me.png" alt="">&nbsp;&nbsp;个人信息统计</p>
+			   <p id="manage"><img src="img/sx/me.png" alt="">&nbsp;&nbsp;系统管理</p>
+			   <p id="ranking"><img src="img/sx/paihang.png" alt="">&nbsp;&nbsp;排行榜</p>
+			   <!--<p id="feedback"><img src="img/sx/fankui.png" alt="">&nbsp;&nbsp;反馈建议</p>
+			   <p><img src="img/sx/tuijian.png" alt="">&nbsp;&nbsp;推荐好友</p>
+			   <p><img src="img/sx/guanyu.png" alt="">&nbsp;&nbsp;关于查违章</p>
+			   <p id="goback"><img src="img/sx/tuichu.png" alt="">&nbsp;&nbsp;退出登录</p>-->
+		   </div>
+		   <div class="about_2">
+			   <img src="img/logo144.png" alt="">
+		   </div>
+	   </div>
+	</div>
+	
+	<script>
+		document.addEventListener('plusready', function(){
+			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var content = $("#content");
+			content.css({"width":width,"height":height});
+			var message = $("#message");
+			message.click(function(){
+				navigateTo("message.html", true, "个人信息", null);
+			});
+			/*var goback = $("#goback");
+			goback.click(function(){
+				navigateTo("login.html", false, null, null);
+			});
+			var feedback = $("#feedback");
+			feedback.click(function(){
+				navigateTo("feedback.html", true, "反馈", null);
+			});*/
+			var ranking = $("#ranking");
+			ranking.click(function(){
+				navigateTo("ranking.html", true, "排行榜", null);
+			});
+			var manage = $("#manage");
+			manage.click(function(){
+				navigateTo("managetmp.html", true, "系统管理", null);
+			})
+		});
+	</script>
+</body>
+</html>

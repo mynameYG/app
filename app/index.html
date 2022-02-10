@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+    <script type="text/javascript">
+   		document.addEventListener('plusready', function(){
+   			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+   		});	
+    </script>
+	<style>
+	    * { margin: 0; padding: 0; box-sizing: border-box; color: #fff;}
+		.concent{background: url(img/timg.jpg); position: relative; }
+		.baowei{position: absolute;width: 624px; height: 280px;top:50%;left:50%;margin-top: -140px;margin-left: -312px;}
+		.myright,.myleft{width:48%; text-align: center;}
+		/*左边*/
+		.myleft{float: left; height:280px;text-align: center; font-size: 15px;margin-left:12.5px; font-weight: bold;}
+		.l-top{height:160px;margin-bottom: 10px;}
+		.l-bottom{height:110px; display: flex;justify-content: space-between;}
+		.pai,.exam{height:160px;width:138px;float: left;}
+		.pai>img{margin:15px 0;}
+		.pai{ background: #04786d;}
+		.pai>p{font-size: 20px;} 
+		.exam{float: right;}
+		.fight,.exam2{height:75px;width: 100%; padding:5px 0;}
+		.fight{ background: #4f7a66;}
+		.exam2{margin-top:10px;background: #4f7a66; padding:5px 0;}
+		.skill,.history,.topic{width: 90px;height:100%;padding:10px 0;}
+		.skill{background: #ab9c7d;}
+		.history{background:#ab9c7d; }
+		.topic{background: #ab9c7d;}
+		.skill>img,.history>img,.topic>img{margin:10px 0;}
+		/*右边*/
+		.myright{float:right; height:280px;justify-content: space-around;display: flex;font-size: 20px;font-weight: bold;}
+		.myright img{margin-bottom: 5px;}
+		.basetrain,.advance{height: 280px;width: 125px;padding-top:40px;}
+		.basetrain{background:#4c7d68;}
+		.advance{ background: #04786d;}
+		.expect{background:rgba(0,0,0,0.8); color: #fff;width: 200px; height:50px;  font-size: 30px;text-align: center;position: fixed;line-height: 50px;
+		  top: 50%; left:50%;z-index: 1;margin-top: -25px; margin-left: -100px;  }
+		.expect{animation: hidetip 1s; display: none;}
+		 @keyframes hidetip {from {opacity: 1;} to {opacity: 0;}  }
+	</style>
+</head>
+<body>
+	 <div class="concent" id="concent">
+		 <!-- 敬请期待 -->
+		 <p class="expect" id="expect">敬请期待</p>
+		 <div class="baowei">
+			  <div class="myleft">
+				 <div class="l-top">
+					 <div class="pai" id="camera">
+						<img src="img/indeximg/camera1.png" >
+						<p>拍违章</p> 
+					 </div>
+					 <div class="exam">
+						<div class="fight" id="fight">
+							<img src="img/indeximg/duizhan5.png" alt="">
+							<p>好友对战</p>
+						</div>
+						<div class="exam2" id="exam2">
+							<img src="img/indeximg/exam1.png" alt="">
+							<p>应知应会考试</p>
+						</div>
+					 </div>
+				 </div>
+				 <div class="l-bottom">
+					 <div class="skill" id="skill">
+						<img src="img/indeximg/skill1.png" alt="">
+					 <p>技能库</p>
+					 </div>
+					 <div class="history" id="history">
+						<img src="img/indeximg/record1.png" alt="">
+						  <p>历史记录</p>
+						 </div>
+					 <div class="topic" id="topic">
+						 <img src="img/indeximg/about1.png" alt="">
+						 <p>关于</p>
+					 </div>
+				 </div>
+			  </div>
+			  <div class="myright">
+				 <div class="basetrain" id="basetrain">
+					  <img src="img/indeximg/shixun1.png" alt="">
+					  <p>实</p>
+					  <p>训</p>
+					  <p>版</p>
+				  </div>
+				  <div class="advance" id="advance">
+					  <img src="img/indeximg/jinjie1.png" alt=""> 
+					  <p>进</p>
+					  <p>阶</p>
+					  <p>版</p>
+				  </div>
+			  </div>
+		</div>
+	 </div>
+	<script>
+		$(function() {
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var concent = $("#concent");
+			concent.css({"width":width,"height":height});
+		});
+		document.addEventListener('plusready', function(){
+			var basetrain = $("#basetrain");
+			var advance = $("#advance");
+			var camera = $("#camera");
+			var topic = $("#topic");
+			var fight = $("#fight");
+			var exam2 = $("#exam2");
+			var expect = $("#expect");
+			var skill = $("#skill");
+			var history = $("#history");
+			basetrain.click(function(){
+				navigateTo("basetrain.html", false, null, null);
+			});
+			advance.click(function(){
+				navigateTo("advtrainlist.html", true, "进阶版查违章", null);
+			});
+			camera.click(function(){
+				navigateTo("film.html", false, null, null);
+			});
+			topic.click(function(){
+				navigateTo("about.html", true, "关于", null);
+			});
+			fight.click(function(){
+				navigateTo("fightroom.html", true, "开始对战", null);
+			});
+			exam2.click(function(){
+				navigateTo("pattern.html", true, "选择模式", null);
+			});
+			skill.click(function(){
+				navigateTo("skill.html", true, "技能库", null);
+			});
+			
+			history.click(function(){
+				navigateTo("score.html", true, "历史记录", null);
+			});
+			function hideExpect(){
+				expect.show();
+				setTimeout(function() {
+					expect.hide();
+				}, 1000);
+			}
+		});
+	</script>
+</body>
+</html>

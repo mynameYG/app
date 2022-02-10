@@ -1,0 +1,133 @@
+ <!DOCTYPE html>
+<html>
+	
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" href="css/bootstrap.min.css">
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/eristool.js"></script>
+		<script src="js/erisapi.js"></script>
+		<script type="text/javascript">
+			document.addEventListener('plusready', function() {
+				//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			});
+		</script>
+		<style>
+			* {
+				margin: 0;
+				padding: 0;
+				box-sizing: border-box;
+			}
+
+			.concent {
+				background: #fff;
+				position: relative;
+				background-image: url(img/timg.jpg);
+			}
+
+			.skr {
+				background: fff;
+				position: absolute;
+				width: 600px;
+				height: 300px;
+				left: 50%;
+				top: 50%;
+				margin-left: -300px;
+				margin-top: -150px;
+				overflow:auto;  
+				white-space: nowrap;
+				/* border: 1px solid red; */
+			}
+			.headline{
+				display: flex;
+				justify-content: space-around;
+				width:100%;
+				height: 12%;
+				/* border: 1px solid red; */
+			}
+			.headline>p{
+				color: #fff;
+				font-size: 24px;
+				font-weight: bold;
+			}
+			.message{
+				width: 100%;
+				height: 88%;
+				/* border: 1px solid red; */
+				overflow: auto;
+			}
+			.message>div{
+				text-align: center;
+				width: 100%;
+				float: left;
+				border-bottom:1px solid #777;
+			}
+			.message>div>p{
+				float: left;
+				width:48px;
+				margin: 0 75px;
+				font-size: 20px;
+				position: relative;
+				color: #fff;
+			}
+			.imgleft>img{
+				position: absolute;
+				left: -45px;
+			}
+			
+		</style>
+	</head>
+	
+	<body>
+		<div class="concent" id="concent">
+			<div class="skr" id="skr">
+				<div class="headline"> 
+					<p>排名</p>
+					<p>姓名</p>
+					<p>得分</p>
+				</div>
+				<div id="rankList" class="message">
+				</div>
+			</div>
+		</div>
+		<script>
+			document.addEventListener('plusready', function() {
+				//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				var concent = $("#concent");
+				concent.css({
+					"width": width,
+					"height": height
+				});
+				
+				createMask(true);
+				ErisApi.GetScoreRank(function(result) {
+					var rank = result.data.rank;
+					var html = '';
+					for (var i = 0; i < rank.length; i++) {
+						var one = rank[i];
+						if (i === 0) {
+							html += '<div><p class="imgleft"><img src="img/sx/guanjun.png"/>' + (i + 1) + '</p><p>' + one.nickname + '</p><p>' + one.score + '</p></div>';
+						} else if (i === 1) {
+							html += '<div><p class="imgleft"><img src="img/sx/yajun.png"/>' + (i + 1) + '</p><p>' + one.nickname + '</p><p>' + one.score + '</p></div>';
+						} else if (i === 2) {
+							html += '<div><p class="imgleft"><img src="img/sx/jijun.png"/>' + (i + 1) + '</p><p>' + one.nickname + '</p><p>' + one.score + '</p></div>';
+						} else {
+							html += '<div><p>' + (i + 1) + '</p><p>' + one.nickname + '</p><p>' + one.score + '</p></div>';
+						}
+					}
+					$("#rankList").append(html);
+					createMask(false);
+				}, function(error) {
+					createMask(false);
+					showTip(true, error.msg, 2000);
+				});
+			});
+		</script>
+	</body>
+	
+</html> 

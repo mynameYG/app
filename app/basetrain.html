@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<title>实训版查违章</title>
+		<link rel="stylesheet" href="css/bootstrap.min.css"/>
+		<style>
+			* { margin: 0; padding: 0; box-sizing: border-box; }
+			html, body { width: 100%; height: 100%; overflow: hidden; }
+			.main_container { width: 100%; height:100%;  position: relative;}
+			.progress { border-radius: 0; margin-bottom: 0; position: relative; background: #bbb;z-index: 100;}
+			.progress_text { position: absolute; width: 100%; height: 100%; color: #fff; text-align: center; text-shadow:0px 0px 3px #000000;}
+			.bg_img_container { width: 100%; height: 100%; position: relative; background-size: contain; background-repeat: no-repeat; background-attachment: fixed; background-position: center; }
+			.file{position: absolute; left: -5%;top:-5%; width: 110%;height:110%;  background-repeat: no-repeat; background-size: cover; filter: blur(3px);}
+			.main_container>div>span {line-height: 20px;font-size: 16px;color: #fdfffe;}
+			.info_container {position: fixed;z-index: 100;left: 50%;margin-left: -107.5px;}
+			.info_container>span {font-size: 20px; text-shadow:0px 0px 3px #000000;}
+			.info_container>span>b {color: #f0ad4e;}
+			/* page_container*/ 
+			.page_container {position: fixed;z-index: 100;text-align: center;left: 50%;margin-left: -101.5px;bottom: 15px;}
+			.page_container>a:hover {text-decoration: none;}
+			.page_container>a {color: #fff;font-weight: bold;}
+			.page_container>a>.glyphicon {color: #fff;height: 30px;width: 30px;line-height: 30px;background: rgba(0, 0, 0, 0.5);border-radius: 50%;}
+			.page_container>a>span>.glyphicon {color: #00796A;height: 30px;width: 30px;line-height: 30px;background: rgba(0, 0, 0, 0.5);border-radius: 50%;}
+			/* 三次提示与返回 */
+			.btn_container {text-align: center;z-index: 100;width: 50px;height: 140px;position: fixed;right: 3%;top: 50%;margin-top: -70px;display: flex;flex-direction: column;justify-content: space-between;}
+			.prompt_btn,.goback_btn {background: rgba(0, 0, 0, 0.5);border-radius: 50%;width: 40px;height: 40px;line-height: 40px;}
+			.prompt_btn {position: relative;}
+			.prompt_num {position: absolute;background: #f0ad4e;width: 20px;height: 20px;line-height: 20px;border-radius: 50%;}
+			/* 坐标 */
+			/*end*/
+			/* 模态框样式*/
+			.m_head {width: 200px;height: 350px;padding: 10px;position: absolute;top:50%;left: 50%;margin-top:-170px;margin-left:-100px;}
+			.m_head img{border-radius: 50%;width: 100%;height: 100%;}
+			.headimg{ color:#fff;text-align: center;  position: relative;width: 80px;height: 80px;border-radius: 50%;overflow: hidden;left: 50%;margin-left: -40px;}
+			.m_head p{color: #fff;margin-bottom:-5px;margin-top:5px;}
+			.container_wjx{	position:relative;text-align: center;  width:120px;left: 30px;}
+			.wujiaoxing1,.wujiaoxing{font-size:24px;width: 120px; }
+			.wujiaoxing{color:yellow;position: absolute; overflow: hidden; top:0px; left:0px;width:100%;height:100%;}
+			.wujiaoxing {font-size: 24px;}
+			.mycenter>p {margin: 15px 0;border-bottom: 1px dashed #fff;}
+			.m_head .noneboredr{border: none; margin:0; text-align: center;}
+			.fanhui {display: block;margin: auto;text-align: center;width: 100px;height: 30px;background: #9e9e9e;color: #fff;line-height: 30px;border-radius: 5px;text-decoration: none;}
+			.fanhui:hover {text-decoration: none;color: #fff;}
+			.hra{margin:0; background: #fff;} 
+			.admin{bottom: 0;position: absolute;left: 0; background: rgba(0, 0, 0, 0.5); width: 100%;}  
+			.mycenter p {width: 180px;}
+			.mycenter p span{
+			  width:50%;display: inline-block;
+			}
+			.mycenter p span:nth-child(1){text-align: right;}
+			.mycenter p span:nth-child(2){width:40%}
+			/*模态框样式end*/
+			/*违章说明模态框*/
+			/* .shuoming {position: fixed;width: 400px;height: 200px;z-index: 1000;top: 50%;left: 50%;margin-left: -200px;margin-top: -100px;}
+			.shuoming_1 {background: #f0ad4e;height: 30%;width: 400px;border-top-left-radius: 15px;border-top-right-radius: 15px;line-height: 60px;font-size: 24px;text-align: center;}
+			.shuoming_2 {height: 70%;width: 400px;background: rgba(0, 0, 0, 0.5);border-bottom-left-radius: 15px;border-bottom-right-radius: 15px;color: #fff;font-size: 16px;word-wrap: break-word;text-indent: 1cm;}
+			 */
+			.shuoming {position: fixed;width: 300px;height: 144px;z-index: 1000;top: 50%;left: 50%;margin-left: -150px;margin-top: -72px;}
+			.shuoming_1 {background: #f0ad4e;height: 30px;width: 300px;border-top-left-radius: 15px;border-top-right-radius: 15px;line-height: 34px;font-size: 18px;text-align: center;font-weight: bold;color: #fff;}
+			.shuoming_2 {overflow: auto;height: 114px;width: 300px;background: rgba(0, 0, 0, 0.5);color: #fff;font-size: 16px;word-wrap: break-word;text-indent: 2em;padding:10px 10px}
+			/*违章说明end*/
+			.bg_img_container .icox { z-index:1000; position:absolute; }
+			.bg_img_container .icox_animation {animation: mymove 2s infinite;animation-direction: alternate;/*轮流反向播放动画。*//*animation-timing-function: ease-in-out; *//*动画的速度曲线*/}
+			@keyframes mymove {0% {transform: scale(0.8);/*开始为原始大小*/}25% {transform: scale(1);/*放大1.1倍*/}50% {transform: scale(0.8);}75% {transform: scale(1);}}
+			/*微调*/
+			/* #progress-bar{line-height:25px;} */
+			/*分数面板*/
+			.container_wjx{	position:relative;}
+			.wujiaoxing1,.wujiaoxing{font-size:24px;}
+			.wujiaoxing{color:yellow;position: absolute; overflow: hidden; top:0px; left:0px;width:100%;height:100%;}
+			.alerts { background: rgba(0,0,0,0.5); position: fixed;top:0;left:0; width:100%;height:100%; display: none; z-index:10000}
+			.pop_up { position:absolute;  width: 300px;height: 150px;z-index: 1000;top: 50%;left: 50%;margin-left:-150px;margin-top: -75px;
+			         background: rgba(0,0,0,0.5); border-radius: 10px;padding:30px; }
+			.pop_up p{font-size: 20px;color:#fff;text-align: center;}
+			.pop_up span{display:inline-block; width:100px;height:35px;text-align: center;border-radius: 5px;font-size:20px; line-height: 35px;color:#fff;margin-top:15px;}
+			.pop_up .determine{background:#00796A;}
+			.pop_up .countermand{background:#9e9e9e;float:right;}
+			a:hover{text-decoration: none;}
+			/*进度条颜色*/
+			.progress-striped .progress-bar-warning {
+			  background-image: -webkit-linear-gradient(45deg, rgba(255, 255, 255, .15) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .15) 50%, rgba(255, 255, 255, .15) 75%, transparent 75%, transparent);
+			  background-image:linear-gradient(45deg, rgba(255, 255, 255, .35) 25%, transparent 25%, transparent 50%, rgba(255, 255, 255, .35) 50%, rgba(255, 255, 255, .35) 75%, transparent 75%, transparent);
+			}
+			.textshadow{background: #00796A; display:inline-block; width:80px; height:30px;line-height: 30px;border-radius: 10px;}
+		</style>
+		<script src="js/jquery.min.js"></script>
+		<script src="js/bootstrap.min.js"></script>
+		<script src="js/eristool.js"></script>
+		<script src="js/erisapi.js"></script>
+	</head>
+	<body>
+		<div id="main_container" class="main_container">
+			<div id="progress" class="progress progress-striped active">
+				<div class="progress-bar  progress-bar-warning" id="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"></div>
+				<div id="progress_text" class="progress_text">
+					<span id="progress_number">20</span>/20
+				</div>
+			</div>
+			<!--  -->
+			<div class="info_container">
+				<span>错误数：<b id="info_error_count">0</b></span>&nbsp;&nbsp;&nbsp;&nbsp; <span>本页违章数量：<b>1</b></span>
+			</div>
+			<!-- 上一页下一页 -->
+			<div class="page_container">
+				<a href="javascript:void(0)" id="prepage_btn"></span><span class="textshadow">上一张</span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="javascript:void(0)" id="nextpage_btn"><span id="nextpage_span" class="textshadow">下一张</span></a>
+			</div>
+			<!-- 3次提示与返回 -->
+			<div class="btn_container">
+				<div id="prompt_btn" class="prompt_btn">
+					<img src="img/sx/dengpao.png" alt="">
+					<span id="prompt_num" class="prompt_num">3</span>
+				</div>
+				<div id="goback_btn" class="goback_btn"><a href="javascript:void(0)"><img src="img/sx/fanhui.png" alt=""></a></div>
+			</div>
+            <div class="file" id="file"></div>
+			<div id="bg_img_container" class="bg_img_container"></div>			 
+			 <div id="myModal" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog"
+			     aria-labelledby="myModalLabel" aria-hidden="">
+			         <div class="m_head">
+			             <div class="headimg">
+			                 <img id="myavatar" src="img/e16989a0.jpg" alt="">
+			                 <span id="mynickname" class="admin"></span>
+			             </div>
+			             <p class="noneboredr"><b>实训版</b>&nbsp;&nbsp;最终成绩</p>
+			             <div class="container_wjx">
+			                     <span class="wujiaoxing1">★★★★★</span>
+			                     <span class="wujiaoxing" id="pentagon">★★★★★</span>
+			             </div>
+			             <hr class="hra">
+			             <div class="mycenter">
+			                 <p><span>违章点:</span>&nbsp;&nbsp;<span>20</span></p>
+			                 <p> <span>正确:</span>&nbsp;&nbsp;<span id="option_success">0</span></p>
+			                 <p> <span>错选:</span>&nbsp;&nbsp;<span id="option_error">0</span></p>
+			                 <p> <span>提示:</span>&nbsp;&nbsp;<span id="tip_number">0</span></p>
+			             </div>  
+			                <a class="fanhui" id="backtrack">返回</a> 
+			         </div> 
+			     </div>
+				
+			<div id="myModal1" class="modal fade" data-keyboard="false" data-backdrop="static" data-role="dialog"
+			 aria-labelledby="myModalLabel" aria-hidden="">
+				<div class="shuoming">
+					<div class="shuoming_1">违章说明</div>
+					<div class="shuoming_2">
+					</div>
+				</div>
+			</div>
+			<!--音频-->
+			<div class="alerts" id="alerts">
+				<div class="pop_up" id="pop_up">
+					<p>确定要退出吗?</p>
+					<span class="determine" id="determine">确定</span> <span class="countermand" id="countermand">取消</span>
+				</div>
+			</div>	
+		</div>
+		<script>
+			createMask(true, '1');
+			/*点击完成后模态框*/
+			var qInfos = [];
+			var qRecord = null;
+			function HtmlLoad() {
+				if(qRecord.status !== "unaed" && qRecord.status !== "ping" && qRecord.status !== "aing") {
+					createMask(true);
+					var score = Math.round((parseInt($("#option_success").html() / 20)) * 5);
+					ErisApi.SetBasetrainScore(score, function(result) {
+						$("#myavatar").attr("src", UrlHelper.makeUrl(plus.storage.getItem("uinfo_avatar")) || "img/e16989a0.jpg");
+						$("#mynickname").html(plus.storage.getItem("uinfo_nickname") || "");
+						createMask(false);
+						$('#myModal').modal('show');
+					}, function(error) {
+						showTip(true, error.msg, 2000);
+					});
+				}
+			};
+			/*显示违章提示模态框*/
+			function HtmlLoad1(id) {
+				for(var i=0; i<=qInfos.length; i++) {
+					if(qInfos[i].id === id){
+						$(".shuoming_2").text(qInfos[i].msg);
+						break;
+					}
+				}
+				$('#myModal1').modal('show');
+			};
+			
+			document.addEventListener('plusready', function() {
+				var main_container = $("#main_container");
+				var progress = $("#progress");
+				var bg_img_container = $("#bg_img_container");
+				var divWidth = 0;  
+				var divHeight = 0;
+				var prompt_num = $("#prompt_num");
+				var promptNum = 3;
+				var progress_text = $("#progress_text");
+				var backtrack = $("#backtrack");
+				var width = window.innerWidth;
+				var height = window.innerHeight;
+				var file = $("#file");
+				/*音频*/
+				playBg1();
+				// 初始化页面
+				function calculateSize() {
+					// var width = window.innerWidth;
+					// var height = window.innerHeight;
+					var progressHeight = height * 0.037;
+					progress.css({ "width": width + "px", "height": progressHeight + "px" });
+					progress_text.css({ "lineHeight": progressHeight + "px" });
+					divWidth = width;
+					divHeight = height * 0.963;
+					bg_img_container.css({ "width": divWidth + "px", "height": divHeight + "px" });
+					// file.css({ "width": divWidth + "px", "height": divHeight + "px" });
+					prompt_num.html(promptNum);
+				}
+				calculateSize();
+				/*音频*/
+				/**点击返回弹出框**/
+				$("#goback_btn").click(function() {
+					playAction();
+					$("#alerts").show();
+				});
+				$("#countermand").click(function() {
+					playAction();
+					$("#alerts").hide();
+				});
+				$("#determine").click(function() {
+					navigateBack();
+				});
+				backtrack.click(function(){
+					navigateBack();
+				})
+				// 获得题目数据
+				var qRecords = [];
+				function getQuestions(callback) {
+					ErisApi.GetBaseTrain(function(r) {
+						qInfos = r.data;
+						for(var i=0; i<qInfos.length; i++) {
+							qRecords.push({
+								id: qInfos[i].id,
+								// 问题的回答状态,
+								// unaed表示未回答,
+								// ping表示点击提示按钮正在提示,
+								// aing表示第一次回答错误且还未再次根据提示回答,
+								// aedandwrong表示回答完毕并且第一次回答错误,
+								// aedandright表示回答完毕并且第一次回答正确
+								status: "unaed", 
+								errx: -1, // 用户回答错误时错误点的x坐标,在点击事件中被修改
+								erry: -1,
+								rightx: -1, // 用户回答正确时错误点的x坐标,在点击事件中被修改
+								righty: -1
+							});
+						}
+						callback();
+					}, function(r) {
+						showTip(true, r.msg, 2000);
+					});
+				};
+				// 替换题目图片
+				function putImgUrl(url) {
+					bg_img_container.css("background-image", "url(" + url + ")");
+					file.css("background-image", "url(" + url + ")")
+				};
+				// 修改统计信息
+				var info_error_count = $("#info_error_count");
+				function putTrainScore() {
+					var errorCount = 0;
+					for(var i=0; i<qRecords.length; i++) {
+						switch(qRecords[i].status) {
+							case "aing":
+							case "aedandwrong":
+								errorCount++;
+								break;
+						}
+					}
+					info_error_count.html(errorCount);
+					$("#option_error").html(errorCount); //提示面板错误个数
+					$("#option_success").html(20-errorCount); //提示面板正确个数
+					$("#pentagon").css("width",(20-errorCount) / 20 *100+"%")
+				};
+				// 修改进度条
+				var progressBar = $("#progress-bar");
+				function putProgressBar() {
+					var progressCount = 20;
+					for(var i=0; i<qRecords.length; i++) {
+						switch(qRecords[i].status) {
+							case "aedandright":
+							case "aedandwrong":
+								progressCount--;
+								break;
+						}
+					}
+					progressBar.css("width", (progressCount / 20 * 100) + "%");
+					$("#progress_number").html(progressCount);
+				}
+				
+				// 加载一个题目
+				var qInfo = null;
+				function loadQuestion(index) {
+					if (index < 0 || index >= qInfos.length) {
+						return;
+					};
+					// 清理页面上已经存在的图标
+					for (var i = 0; i < icos.length; i++) {
+						icos[i].remove();  
+					};
+					icos = [];
+					
+					qRecord = qRecords[index];
+					if (qRecord) {
+						qInfo = qInfos[index];
+						if (qInfo) {
+							putImgUrl(qInfo.imgurl);
+							if(qRecord.status === "ping") { // ping表示点击提示按钮正在提示,
+								var point = imgToDiv({ x: qInfo.tx, y: qInfo.ty });
+								promptTip = putIconTo("prompt", point.x, point.y);
+							} else if (qRecord.status === "aing") { // aing表示第一次回答错误且还未再次根据提示回答,
+								var point1 = imgToDiv({ x: qRecord.errx, y: qRecord.erry });
+								putIconTo("wrong", point1.x, point1.y);
+								var point2 = imgToDiv({ x: qInfo.tx, y: qInfo.ty });
+								promptTip = putIconTo("prompt", point2.x, point2.y);
+							} else if (qRecord.status === "aedandwrong") { // aedandwrong表示回答完毕并且第一次回答错误,
+								var point1 = imgToDiv({ x: qRecord.errx, y: qRecord.erry });
+								putIconTo("wrong", point1.x, point1.y);
+								var point2 = imgToDiv({ x: qRecord.rightx, y: qRecord.righty });
+								putIconTo("right", point2.x, point2.y, qInfo.id);
+							} else if (qRecord.status === "aedandright") { // aedandright表示回答完毕并且第一次回答正确
+								var point = imgToDiv({ x: qRecord.rightx, y: qRecord.righty });
+								putIconTo("right", point.x, point.y, qInfo.id);
+							} else { // 默认状态为unaed
+								// 同时加载后两幅图片，尽可能使下一页加载更快
+								if(index < 18)  { // 后边至少有两幅图
+									var img = new Image();
+									img.src = qInfos[index + 2].imgurl;
+								}
+								if(index < 19) { // 后边至少有一幅图
+									var img = new Image();
+									img.src = qInfos[index + 1].imgurl;
+								}
+							};
+						}
+					}
+				}
+				// 坐标转换内部方法
+				function pToP(point, isDivToImg) {
+					var imgRatio = qInfo.imgw / qInfo.imgh;  //图片的宽高比  
+					var divRatio = divWidth / divHeight;     //容器的宽高比   
+					var scale = 1;
+					var imgTopLeft = {};
+					if(imgRatio > divRatio) { // 有上下空白
+						scale = divWidth / qInfo.imgw;  
+						var imgw = divWidth;
+						var imgh = qInfo.imgh * scale;
+						imgTopLeft.x = 0;
+						imgTopLeft.y = (divHeight - imgh) / 2;
+					} else { // 有左右空白或刚好放满
+						scale = divHeight / qInfo.imgh;
+						var imgw = qInfo.imgw * scale;
+						var imgh = divHeight;
+						imgTopLeft.x = (divWidth - imgw) / 2;
+						imgTopLeft.y = 0;
+					}
+					var result = { x: point.x, y: point.y }
+					if(isDivToImg) {
+						result.x = result.x - imgTopLeft.x;
+						result.y = result.y - imgTopLeft.y;
+						result.x = result.x / scale;
+						result.y = result.y / scale;
+					} else {
+						result.x = result.x * scale;
+						result.y = result.y * scale;
+						result.x = result.x + imgTopLeft.x;
+						result.y = result.y + imgTopLeft.y;
+					}
+					return result;
+				};
+				
+				// 把一个相对于原始图片本身的坐标点换算为一个相对于容器的坐标点
+				function imgToDiv(point) {
+					return pToP(point, false);
+				};
+				
+				// 把一个相对于容器的坐标点换算为一个相对于原始图片本身的坐标点
+				function divToImg(point) {
+					return pToP(point, true);
+				};
+				
+				// 检测一个容器坐标是否在图片内
+				function checkRange(x, y) {
+					var point = divToImg({ x: x, y: y });
+					return point.x >= 0 && point.y >= 0 && point.x <= qInfo.imgw && point.y <= qInfo.imgh;
+				};
+				
+				// 检测一个容器坐标是否在违章范围内
+				function checkRight(x, y) {
+					var point = divToImg({ x: x, y: y });
+				    return point.x >= qInfo.x1 && point.x <= qInfo.x2 && point.y >= qInfo.y1 && point.y <= qInfo.y2;
+				};
+				
+				// 放置一个图标
+				var icos = [];
+				function putIconTo(type, x, y, id) {
+					var one = null;
+					switch(type) {
+						case "right":
+							one = $('<img class="icox" onclick="HtmlLoad1('+ id +')" src="img/sx/bigright.png" style="left:' + (x - 16) + 'px;top:' + (y - 16) + 'px;"/>');
+							break;	
+						case "wrong":
+							one = $('<img class="icox" src="img/sx/bigwrong.png" style="left:' + (x - 16) + 'px;top:' + (y - 16) + 'px;"/>');
+							break;
+						case "prompt":
+							one = $('<img class="icox icox_animation" src="img/sx/tishi.png" style="left:' + (x - 25) + 'px;top:' + (y - 25) + 'px;"/>');
+							break;
+					};
+					bg_img_container.append(one);
+					icos.push(one);
+					return one;
+				};
+				// 点击之后的处理函数
+				var promptTip = null; // 提示图标的缓存 
+				function doImgClick(event) {  
+					var clickX = event.offsetX; // 点击的位置,相对于被点击元素的做上角  
+					var clickY = event.offsetY;
+					if(event.toElement !== bg_img_container[0]) { // 当点击元素是其它图标时的补丁
+						var tmp = $(event.toElement);
+						clickX = event.offsetX + tmp.position().left;
+						clickY = event.offsetY + tmp.position().top;
+					}
+					if(checkRange(clickX, clickY)) {
+						if(qRecord.status === "unaed") { // unaed表示未回答,
+							if(checkRight(clickX, clickY)) {
+								putIconTo("right", clickX, clickY, qInfo.id);
+								playRight();
+								var point = divToImg({ x: clickX, y: clickY })
+								qRecord.rightx = point.x;
+								qRecord.righty = point.y;
+								qRecord.status = "aedandright"; // aedandright表示回答完毕并且第一次回答正确
+							} else {
+								putIconTo("wrong", clickX, clickY);
+								playWrong();
+								var point1 = imgToDiv({ x: qInfo.tx, y: qInfo.ty })
+								promptTip = putIconTo("prompt", point1.x, point1.y);
+								promptTip.click(function(){
+									playRight();
+								});
+								var point2 = divToImg({ x: clickX, y: clickY })
+								qRecord.errx = point2.x;
+								qRecord.erry = point2.y;
+								qRecord.status = "aing"; // aing表示第一次回答错误且还未再次根据提示回答
+							};                       
+						} else if(qRecord.status === "ping" || qRecord.status === "aing") { // ping表示点击提示按钮正在提示
+							if(checkRight(clickX, clickY)) {
+								putIconTo("right", clickX, clickY, qRecord.id);
+								if(promptTip) {
+									promptTip.remove();
+								}
+								var point = divToImg({ x: clickX, y: clickY })
+								qRecord.rightx = point.x;
+								qRecord.righty = point.y;
+								if(qRecord.status === "ping") {
+								   qRecord.status = "aedandright"; // aedandright表示回答完毕并且第一次回答正确
+								} else {
+								   qRecord.status = "aedandwrong"; // aedandwrong表示回答完毕并且第一次回答错误
+								}
+							}
+						}
+						putTrainScore();
+					}	
+				};
+				
+				// 提示按钮
+				function doPromptBtnClick() {
+					if(qRecord.status === "unaed" && promptNum > 0) {
+						var point = imgToDiv({ x: qInfo.tx, y: qInfo.ty })
+						promptTip = putIconTo("prompt", point.x, point.y);
+						if(promptNum--) { 
+							playRemind();
+						}
+						promptTip.click(function(){
+							playRight();
+						})	
+						prompt_num.html(promptNum);
+			            $("#tip_number").html(3-promptNum); //一个提示次数
+						qRecord.status = "ping";
+					}
+				}
+				
+				// 绑定页面元素的事件
+				function bindingEvent() {
+					bg_img_container.click(doImgClick);
+					$("#prepage_btn").click(function() {
+						if(currentPage > 0) {
+							currentPage--;
+							loadQuestion(currentPage);
+							playAction();
+						}
+					});
+					var nextpage_span = $("#nextpage_span");
+					$("#nextpage_btn").click(function() {
+						if(qRecord.status !== "unaed" && qRecord.status !== "ping" && qRecord.status !== "aing") {
+							if(currentPage < 19) {
+								currentPage++;
+								loadQuestion(currentPage);
+								playAction();
+								if(currentPage >= 19) {
+									// 完成,弹出分数面板
+									$("#nextpage_btn").html('<span id="load" onclick="HtmlLoad()"><span class="textshadow">完成</span></span>');
+								}
+							}
+							putProgressBar();
+						}
+					});
+					
+					$("#prompt_btn").click(doPromptBtnClick);
+					// 绑定返回按钮事件
+				}
+
+				// 分数面板
+				function scorePanel() {
+					$('#myModal').modal('show');
+				};
+				
+				// 初始化页面
+				var currentPage = 0;
+				getQuestions(function() {
+					currentPage = 0; // 第一题
+					// 完成第一页的图片加载
+					var img = new Image();
+					img.onload = function() {
+						loadQuestion(currentPage);
+						bindingEvent();
+						createMask(false);
+					}
+					img.src = qInfos[currentPage].imgurl;
+				});
+				$("#myModal1").click(function() {
+					$('#myModal1').modal('hide');
+				});
+			});
+			
+		</script>
+	</body>
+</html>

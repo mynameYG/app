@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+	<style>
+		 *{ margin: 0; padding: 0; box-sizing: border-box; }
+		 .dabaowei{ width: 100%; height:100%;display:flex; }
+		 .zuo_left{ width:15%; height: 100%; overflow: auto; }
+		 .zuo_left>div{ width:100%;  text-align: center; border-bottom:1px solid #CDCDCD; margin:0; color: #aeaeae;; }
+		 .you_right{ width: 85%; height: 100%;  position: relative;}
+		 .you_right>iframe{ width: 100%; height: 100%; display: none;}
+		.you_right>.active{display: block;}
+		div.carry{ border-left:3px solid #00796A; color: #000000; }
+		.btn_tr>td{ padding: 20px 0; }
+	</style>
+</head>
+<body>
+	<div id="content" class="content">
+		<div class="dabaowei">
+			<div class="zuo_left" id="zuo_left">
+				<div class="carry">
+					<table>
+						<tr class="btn_tr">
+							<td>&nbsp;<img src="img/sx/tongjibiao1.png" alt=""></td>
+							<td>实训统计表</td>
+						</tr>
+					</table>
+				</div>
+				
+				<div>
+					<table>
+						<tr class="btn_tr">
+							<td>&nbsp;<img src="img/sx/quanzhong1.png" alt=""></td>
+							<td>实训权重</td>
+						</tr>
+					</table>
+				</div>
+				
+				<div>
+					<table>
+						<tr class="btn_tr">
+							<td>&nbsp;<img src="img/sx/tongjibiao2.png" alt=""></td>
+							<td>考试统计表</td>
+						</tr>
+					</table>
+				</div>
+				
+				<div>
+					<table>
+						<tr class="btn_tr">
+							<td>&nbsp;<img src="img/sx/quanzhong2.png" alt=""></td>
+							<td>考题权重</td>
+						</tr>
+					</table>
+				</div>
+				<div>
+					<table>
+						<tr class="btn_tr">
+							<td>&nbsp;<img src="img/sx/shenhe.png" alt=""></td>
+							<td>拍违章审核</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="you_right" id="you_right">
+				<iframe src="manage1.html" frameborder="0" class="right_f active">
+					
+				</iframe>
+				<iframe src="manage2.html" frameborder="0" class="right_f" >
+					
+				</iframe>
+				<iframe src="manage3.html" frameborder="0" class="right_f" >
+					
+				</iframe>
+				<iframe src="manage4.html" frameborder="0" class="right_f" >
+					
+				</iframe>
+				<iframe src="manage5.html" frameborder="0" class="right_f" >
+					
+				</iframe>
+			</div>
+		</div>
+	</div>
+	<script>
+		document.addEventListener('plusready', function(){
+			var width = window.innerWidth;
+			var height = window.innerHeight;
+			var content = $("#content");
+			content.css({"width":width,"height":height});	
+			var zuo_left = $("#zuo_left>div");
+			var you_right = $("#you_right");
+			zuo_left.click(function(){
+				$(this).addClass("carry").siblings().removeClass("carry");
+				var index = $(this).index();
+				$(you_right.find(".right_f")[index]).addClass("active").siblings().removeClass("active");
+			});
+		})   
+	</script>
+</body>
+</html>

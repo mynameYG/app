@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+	<link rel="stylesheet" href="css/bootstrap.min.css">
+	<script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/eristool.js"></script>
+	<style>
+	    *{ margin: 0; padding: 0; box-sizing: border-box; }
+		.content{ position: relative;} 
+		.about{position: absolute; width: 510px;height: 300px; 
+		 left: 50%; top:50%; margin-left: -255px;margin-top: -150px; padding: 30px 0;}
+		 .about>div{ height: 100%; }
+		 .about_1{float: left; display: flex; justify-content: space-around; flex-direction: column;  width:70%}
+		 .about_1>p {font-size: 18px;font-weight: bold;}
+		 .about_1>p span{font-size: 16px;}
+		 .about_1>p img{margin-bottom: 3px;}
+		 .about_2{float: right; display: flex; flex-direction:column; justify-content: space-around; width: 30%;}
+		 .about_2 p{width: 150px;text-align: center;height:40px;line-height: 40px;font-size: 20px;background: #00796A;color: #fff; margin: auto;}
+	</style>
+</head>
+<body>
+	<div class="content" id="content">
+	   <div class="about">
+		   <div class="about_1">
+			  <p><img src="img/sx/name.png" alt="">姓名：<span id="uinfo_nickname"></span></p>
+			  <p><img src="img/sx/gonghao.png" alt="">工号：<span id="uinfo_job_number"></span></p>
+			  <p><img src="img/sx/phone.png" alt="">手机：<span id="uinfo_mobile">13812345678</span></p>
+			  <p><img src="img/sx/status.png" alt="">身份证：<span id="uinfo_id_number"></span></p>
+			  <p><img src="img/sx/gongcheng.png" alt="">工程名：<span id="uinfo_project_name"></span></p>
+			  <p><img src="img/sx/didian.png" alt="">工作地点：<span id="uinfo_working_address"></span></p>
+		   </div>
+		   <div class="about_2">
+			   <p id="modify">修改信息</p>
+			   <p id="modifyPassword">修改密码</p>
+			   <p id="score">个人积分</p>
+			   <!--<p>数据统计</p>-->
+		   </div>
+	   </div>
+	</div>
+	
+	<script>
+		document.addEventListener('plusready', function(){
+			//console.log("所有plus api都应该在此事件发生后调用，否则会出现plus is undefined。"
+			var width = window.innerWidth;
+			var height = window.innerHeight
+			var content = $("#content");
+			var score = $("#score");
+			var modify = $("#modify");
+			var modifyPassword = $("#modifyPassword");
+			content.css({"width":width,"height":height});
+			$("#uinfo_nickname").html(plus.storage.getItem("uinfo_nickname") || "");
+			$("#uinfo_job_number").html(plus.storage.getItem("uinfo_job_number") || "");
+			$("#uinfo_mobile").html(plus.storage.getItem("uinfo_mobile") || "");
+			$("#uinfo_id_number").html(plus.storage.getItem("uinfo_id_number") || "");
+			$("#uinfo_project_name").html(plus.storage.getItem("uinfo_project_name") || "");
+			$("#uinfo_working_address").html(plus.storage.getItem("uinfo_working_address") || "");
+			score.click(function(){
+				navigateTo("score.html", true, "个人积分", null);
+			});
+			modify.click(function(){
+				navigateTo("modify.html", true, "修改信息", null);
+			});
+			modifyPassword.click(function(){
+				navigateTo("modifypassword.html", true, "修改密码", null);
+			});
+		});
+	</script>
+</body>
+</html>
